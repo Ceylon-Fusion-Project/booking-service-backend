@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -21,6 +23,11 @@ public class Event {
 
     @Column(name="event_name", nullable = false)
     private String eventName;
+
+    @ElementCollection
+    @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "image_urls")
+    private List<String> eventImageURLs = new ArrayList<>();
 
     @Column(name="event_description")
     private String eventDescription;

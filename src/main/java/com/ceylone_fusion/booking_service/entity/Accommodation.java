@@ -17,11 +17,14 @@ public class Accommodation {
 
     @Id
     @Column(name = "accomodation_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accommodationId;
 
+    @Column(name = "accommodation_code", nullable = false, unique = true, updatable = false)
+    private String accommodationCode;
+
     @Column(name="name",nullable = false)
-    private String name;
+    private String accommodationName;
 
     @Enumerated(EnumType.STRING)
     @Column(name="accommodation_type", nullable = false)

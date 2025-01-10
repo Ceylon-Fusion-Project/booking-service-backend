@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "rooms")
@@ -28,6 +30,11 @@ public class Room {
     @Enumerated(EnumType.STRING)
     @Column(name="room_type", nullable = false)
     private RoomType roomType;
+
+    @ElementCollection
+    @CollectionTable(name = "room_images", joinColumns = @JoinColumn(name = "room_id"))
+    @Column(name = "image_urls")
+    private List<String> roomImageURLs = new ArrayList<>();
 
     @Column(name = "beds")
     private int beds;
