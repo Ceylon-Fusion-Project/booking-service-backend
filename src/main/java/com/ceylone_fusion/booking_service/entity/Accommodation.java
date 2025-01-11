@@ -31,7 +31,7 @@ public class Accommodation {
     private AccommodationType accommodationType;
 
     @Column(name="description")
-    private String description;
+    private String accommodationDescription;
 
     @Column(name="location", nullable = false)
     private String location;
