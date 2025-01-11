@@ -16,7 +16,7 @@ public class AccommodationSaveRequestDTO {
     private String accommodationCode;
     private String accommodationName;
     private AccommodationType accommodationType;
-    private String description;
+    private String accommodationDescription;
     private String location;
 
 }

@@ -13,4 +13,7 @@ import java.util.List;
 public interface AccommodationRepo extends JpaRepository<Accommodation, Long>, JpaSpecificationExecutor<Accommodation> {
     boolean existsByAccommodationCodeEqualsIgnoreCase(String accommodationCode);
 
+    List<Accommodation> findAllByAccommodationIdEquals(Long accommodationId);
+
+    List<Accommodation> findAllByAccommodationCodeEquals(String accommodationCode);
 }
