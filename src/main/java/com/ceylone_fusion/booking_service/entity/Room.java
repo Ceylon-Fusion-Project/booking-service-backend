@@ -21,8 +21,11 @@ public class Room {
 
     @Id
     @Column(name = "room_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long roomId;
+
+    @Column(name = "room_code")
+    private String roomCode;
 
     @Column(name = "room_number")
     private int roomNumber;
@@ -56,5 +59,16 @@ public class Room {
     @ManyToOne
     @JoinColumn(name="accommodation_id", nullable=false)
     private Accommodation accommodation;
+
+    public Room(String roomCode, int roomNumber, RoomType roomType, List<String> roomImageURLs, int beds, Double pricePerNight, boolean isAvailable, Accommodation accommodation){
+        this.roomCode = roomCode;
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+        this.roomImageURLs = roomImageURLs;
+        this.beds = beds;
+        this.pricePerNight = pricePerNight;
+        this.isAvailable = isAvailable;
+        this.accommodation = accommodation;
+    }
 
 }

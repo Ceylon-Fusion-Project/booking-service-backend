@@ -16,4 +16,8 @@ public interface AccommodationRepo extends JpaRepository<Accommodation, Long>, J
     List<Accommodation> findAllByAccommodationIdEquals(Long accommodationId);
 
     List<Accommodation> findAllByAccommodationCodeEquals(String accommodationCode);
+
+    Accommodation findAccommodationByAccommodationIdEquals(Long accommodationId);
+
+    List<Accommodation> findRoomsByAccommodationIdEquals(Long accommodationId);
 }

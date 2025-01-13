@@ -45,7 +45,7 @@ public class AccommodationServiceIMPL implements AccommodationService {
             return accommodationGetResponseDTOS;
         }
         else{
-            throw new RuntimeException("No Accommodation Found");
+            throw new RuntimeException("No Accommodations Found");
         }
     }
 
@@ -125,6 +125,8 @@ public class AccommodationServiceIMPL implements AccommodationService {
             throw new RuntimeException("Accommodation Not Found");
         }
     }
+
+
 
 }
 
