@@ -1,10 +1,13 @@
 package com.ceylone_fusion.booking_service.controller;
 
 import com.ceylone_fusion.booking_service.dto.AccommodationDTO;
-import com.ceylone_fusion.booking_service.dto.request.AccommodationSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.RoomDTO;
 import com.ceylone_fusion.booking_service.dto.request.AccommodationUpdateRequestDTO;
-import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
+import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
+import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
 import com.ceylone_fusion.booking_service.service.AccommodationService;
+import com.ceylone_fusion.booking_service.service.RoomService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,20 +17,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/accommodation")
+@RequestMapping("api/v1/room")
 @CrossOrigin
-public class AccommodationController {
+public class RoomController {
 
+    @Autowired
+    private RoomService roomService;
     @Autowired
     private AccommodationService accommodationService;
 
-    @PostMapping(path = "/save-accommodation")
-    public ResponseEntity<StandardResponse> saveAccommodation(@RequestBody AccommodationSaveRequestDTO accommodationSaveRequestDTO) {
+    @PostMapping(path = "/save-room")
+    public ResponseEntity<StandardResponse> saveRoom(@RequestBody RoomSaveRequestDTO roomSaveRequestDTO) {
         try {
-            AccommodationDTO response = accommodationService.saveAccommodation(accommodationSaveRequestDTO);
+            RoomDTO response = roomService.saveRoom(roomSaveRequestDTO);
 
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(201, "Accommodation Saved Successfully", response.getAccommodationName()),
+                    new StandardResponse(201, "Room Saved Successfully", response.getRoomNumber()),
                     HttpStatus.CREATED
             );
         } catch (Exception e) {
@@ -39,12 +44,12 @@ public class AccommodationController {
     }
 
 
-    @GetMapping(path = "/get-all-accommodations")
-    public ResponseEntity<StandardResponse> getAllAccommodations() {
+    @GetMapping(path = "/get-all-rooms")
+    public ResponseEntity<StandardResponse> getAllRooms() {
         try {
-            List<AccommodationGetResponseDTO> allAccommodations = accommodationService.getAllAccommodations();
+            List<RoomGetResponseDTO> allRooms = roomService.getAllRooms();
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(200, "Success", allAccommodations),
+                    new StandardResponse(200, "Success", allRooms),
                     HttpStatus.OK
             );
         } catch (Exception e) {
@@ -58,14 +63,14 @@ public class AccommodationController {
 
 
     @GetMapping(
-            path = "/get-accommodation-details-by-id",
+            path = "/get-room-details-by-id",
             params = "id"
     )
-    public ResponseEntity<StandardResponse> getAccommodationById(@RequestParam(value = "id") Long accommodationId) {
+    public ResponseEntity<StandardResponse> getRoomById(@RequestParam(value = "id") Long roomId) {
         try {
-            List<AccommodationGetResponseDTO> response = accommodationService.getAccommodationById(accommodationId);
+            List<RoomGetResponseDTO> response = roomService.getAllRoomDetailsById(roomId);
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(200, "Accommodation Found", response),
+                    new StandardResponse(200, "Room Found", response),
                     HttpStatus.OK
             );
         } catch (Exception e) {
@@ -77,15 +82,14 @@ public class AccommodationController {
     }
 
 
-    @GetMapping(
-            path = "/get-accommodation-details-by-code",
-            params = "code"
-    )
-    public ResponseEntity<StandardResponse> getAccommodationByCode(@RequestParam(value = "code") String accommodationCode) {
+
+
+    @GetMapping(path = "/get-rooms-by-accommodation-id")
+    public ResponseEntity<StandardResponse> getRoomsByAccommodationId(@RequestParam(value = "id") Long accommodationId) {
         try {
-            List<AccommodationGetResponseDTO> response = accommodationService.getAccommodationByCode(accommodationCode);
+            List<RoomGetResponseDTO> response = roomService.getRoomDetailsByAccommodationId(accommodationId);
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(200, "Accommodation Found", response),
+                    new StandardResponse(200, "Room Found", response),
                     HttpStatus.OK
             );
         } catch (Exception e) {
@@ -98,17 +102,17 @@ public class AccommodationController {
 
 
     @PatchMapping(
-            path = "/update-accommodation-details",
+            path = "/update-room-details",
             params = "id"
     )
-    public ResponseEntity<StandardResponse> updateAccommodationDetails(
-            @RequestBody AccommodationUpdateRequestDTO accommodationUpdateRequestDTO,
-            @RequestParam(value = "id") Long accommodationId
+    public ResponseEntity<StandardResponse> updateRoomDetails(
+            @RequestBody RoomUpdateRequestDTO roomUpdateRequestDTO,
+            @RequestParam(value = "id") Long roomId
     ) {
         try {
-            AccommodationDTO response = accommodationService.updateAccommodationDetails(accommodationUpdateRequestDTO, accommodationId);
+            RoomDTO response = roomService.updateRoomDetails(roomUpdateRequestDTO, roomId);
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(200, "Accommodation Updated Successfully", response.getAccommodationName()),
+                    new StandardResponse(200, "Room Updated Successfully", response.getRoomNumber()),
                     HttpStatus.OK
             );
         } catch (Exception e) {
@@ -117,18 +121,18 @@ public class AccommodationController {
                     HttpStatus.NOT_FOUND
             );
         }
-
     }
 
+
     @DeleteMapping(
-            path = "/delete-accommodation-by-id",
+            path = "/delete-room-by-id",
             params = "id"
     )
-    public ResponseEntity<StandardResponse> deleteAccommodationById(@RequestParam(value = "id") Long accommodationId) {
+    public ResponseEntity<StandardResponse> deleteRoomById(@RequestParam(value = "id") Long roomId) {
         try {
-            String response = accommodationService.deleteAccommodationById(accommodationId);
+            String response = roomService.deleteRoomById(roomId);
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(200, response, "Accommodation Deleted Successfully"),
+                    new StandardResponse(200, response, "Room Deleted Successfully"),
                     HttpStatus.OK
             );
         } catch (Exception e) {
@@ -141,7 +145,3 @@ public class AccommodationController {
 
 
 }
-
-
-
-
