@@ -1,8 +1,6 @@
 package com.ceylone_fusion.booking_service.controller;
 
-import com.ceylone_fusion.booking_service.dto.AccommodationDTO;
 import com.ceylone_fusion.booking_service.dto.RoomDTO;
-import com.ceylone_fusion.booking_service.dto.request.AccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;

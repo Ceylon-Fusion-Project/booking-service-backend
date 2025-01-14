@@ -1,11 +1,9 @@
 package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
-import com.ceylone_fusion.booking_service.dto.AccommodationDTO;
 import com.ceylone_fusion.booking_service.dto.RoomDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
-import com.ceylone_fusion.booking_service.entity.Accommodation;
 import com.ceylone_fusion.booking_service.entity.Room;
 import com.ceylone_fusion.booking_service.repo.AccommodationRepo;
 import com.ceylone_fusion.booking_service.repo.RoomRepo;

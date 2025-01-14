@@ -4,7 +4,6 @@ import com.ceylone_fusion.booking_service.dto.AccommodationDTO;
 import com.ceylone_fusion.booking_service.dto.request.AccommodationSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.AccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
-import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
 
 import java.util.List;
 

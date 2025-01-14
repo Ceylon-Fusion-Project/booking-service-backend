@@ -16,5 +16,6 @@ public class AccommodationGetResponseDTO {
     private AccommodationType accommodationType;
     private String description;
     private String location;
+    private boolean isAvailable;
 
 }

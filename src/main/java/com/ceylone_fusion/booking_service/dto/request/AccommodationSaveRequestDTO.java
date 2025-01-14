@@ -1,12 +1,9 @@
 package com.ceylone_fusion.booking_service.dto.request;
 
-import com.ceylone_fusion.booking_service.entity.Room;
 import com.ceylone_fusion.booking_service.entity.enums.AccommodationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +15,6 @@ public class AccommodationSaveRequestDTO {
     private AccommodationType accommodationType;
     private String accommodationDescription;
     private String location;
+    private boolean isAvailable;
 
 }

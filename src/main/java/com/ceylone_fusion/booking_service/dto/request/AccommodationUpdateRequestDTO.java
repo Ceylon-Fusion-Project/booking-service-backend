@@ -14,5 +14,6 @@ public class AccommodationUpdateRequestDTO {
     private AccommodationType accommodationType;
     private String accommodationDescription;
     private String location;
+    private boolean isAvailable;
 
 }

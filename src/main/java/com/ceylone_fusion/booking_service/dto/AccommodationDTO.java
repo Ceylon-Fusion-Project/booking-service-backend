@@ -1,7 +1,6 @@
 package com.ceylone_fusion.booking_service.dto;
 
 import com.ceylone_fusion.booking_service.entity.enums.AccommodationType;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +16,6 @@ public class AccommodationDTO {
     private AccommodationType accommodationType;
     private String accommodationDescription;
     private String location;
+    private boolean isAvailable;
 
 }
