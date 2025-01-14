@@ -17,20 +17,26 @@ public class ExperienceCenter {
 
     @Id
     @Column(name = "experience_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long experienceId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long experienceId;
+
+    @Column(name="experience_code", nullable = false)
+    private String experienceCode;
 
     @Column(name="name", nullable = false)
-    private String name;
+    private String experienceName;
 
     @Column(name="description")
-    private String description;
+    private String experienceDescription;
 
     @Column(name="location", nullable = false)
     private String location;
 
     @Column(name="total_price")
     private Double totalPrice;
+
+    @Column(name="is_available")
+    private boolean isAvailable;
 
     @OneToMany(mappedBy="experienceCenters", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> events;

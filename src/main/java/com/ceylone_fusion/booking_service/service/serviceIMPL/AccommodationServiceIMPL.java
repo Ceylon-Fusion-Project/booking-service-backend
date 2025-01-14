@@ -103,6 +103,10 @@ public class AccommodationServiceIMPL implements AccommodationService {
                 existingAccommodation.setLocation(accommodationUpdateRequestDTO.getLocation());
             }
 
+            // Update Accommodation Is Available
+            if (accommodationUpdateRequestDTO.isAvailable() != false) {
+                existingAccommodation.setAvailable(accommodationUpdateRequestDTO.isAvailable());
+            }
             // Save the updated Accommodation
             accommodationRepo.save(existingAccommodation);
 
@@ -112,19 +116,21 @@ public class AccommodationServiceIMPL implements AccommodationService {
         }
     }
 
-    @Override
-    public String deleteAccommodationById(Long accommodationId) {
-        // Get Accommodation by Accommodation ID
-        if (accommodationRepo.existsById(accommodationId)) {
-            String response = accommodationRepo.getReferenceById(accommodationId).getAccommodationName() + " Deleted!";
 
-            //delete accommodation
-            accommodationRepo.deleteById(accommodationId);
-            return response;
-        } else {
-            throw new RuntimeException("Accommodation Not Found");
+
+        @Override
+        public String deleteAccommodationById(Long accommodationId) {
+            // Get Accommodation by Accommodation ID
+            if (accommodationRepo.existsById(accommodationId)) {
+                String response = accommodationRepo.getReferenceById(accommodationId).getAccommodationName() + " Deleted!";
+
+                //delete accommodation
+                accommodationRepo.deleteById(accommodationId);
+                return response;
+            } else {
+                throw new RuntimeException("Accommodation Not Found");
+            }
         }
-    }
 
 
 

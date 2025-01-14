@@ -36,6 +36,9 @@ public class Accommodation {
     @Column(name="location", nullable = false)
     private String location;
 
+    @Column(name = "is_available")
+    private boolean isAvailable;
+
     @OneToMany(mappedBy="accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> rooms;
 
