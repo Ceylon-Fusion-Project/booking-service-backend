@@ -148,7 +148,7 @@ public class RoomServiceIMPL implements RoomService {
 
     @Override
     public String deleteRoomById(Long roomId) {
-        // Get Room by Accommodation ID
+        // Get Room by Room ID
         if (roomRepo.existsById(roomId)) {
             String response = roomRepo.getReferenceById(roomId).getRoomNumber() + " Deleted!";
 

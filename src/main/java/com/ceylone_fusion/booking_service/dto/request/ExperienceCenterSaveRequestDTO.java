@@ -11,7 +11,7 @@ public class ExperienceCenterSaveRequestDTO {
 
     private String experienceCode;
     private String experienceName;
-    private String experiencDdescription;
+    private String experiencDescription;
     private String location;
     private Double totalPrice;
     private boolean isAvailable;

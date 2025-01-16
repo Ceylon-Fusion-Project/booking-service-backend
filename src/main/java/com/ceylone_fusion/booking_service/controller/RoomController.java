@@ -4,7 +4,6 @@ import com.ceylone_fusion.booking_service.dto.RoomDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
-import com.ceylone_fusion.booking_service.service.AccommodationService;
 import com.ceylone_fusion.booking_service.service.RoomService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,6 @@ public class RoomController {
 
     @Autowired
     private RoomService roomService;
-    @Autowired
-    private AccommodationService accommodationService;
 
     @PostMapping(path = "/save-room")
     public ResponseEntity<StandardResponse> saveRoom(@RequestBody RoomSaveRequestDTO roomSaveRequestDTO) {

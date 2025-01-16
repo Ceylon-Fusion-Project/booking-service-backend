@@ -13,8 +13,6 @@ import java.util.List;
 @EnableJpaRepositories
 public interface RoomRepo extends JpaRepository<Room, Long>, JpaSpecificationExecutor<Room> {
 
-    boolean existsByRoomCodeEqualsIgnoreCase(String roomCode);
-
     List<Room> findAllRoomsByRoomIdEquals(Long roomId);
 
     boolean existsByAccommodation_AccommodationId(Long accommodationId);

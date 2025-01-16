@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Rating {
+public class BookingRating {
 
     @Id
     @Column(name = "rating_id")
