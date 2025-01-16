@@ -17,4 +17,10 @@ public interface ExperienceCenterRepo extends JpaRepository<ExperienceCenter, Lo
     List<ExperienceCenter> findAllByExperienceIdEquals(Long experienceId);
 
     List<ExperienceCenter> findAllByExperienceCodeEquals(String experienceCode);
+
+    ExperienceCenter findExperienceCenterByExperienceIdEquals(Long experienceId);
+
+    List<ExperienceCenter> findEventsByExperienceIdEquals(Long experienceId);
+
+
 }

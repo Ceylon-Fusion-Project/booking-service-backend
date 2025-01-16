@@ -54,6 +54,6 @@ public class Package {
     private Booking booking;
 
     @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rating> ratings;
+    private List<BookingRating> ratings;
 
 }

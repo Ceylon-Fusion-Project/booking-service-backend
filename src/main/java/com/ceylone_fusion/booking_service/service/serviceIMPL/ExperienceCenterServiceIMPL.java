@@ -25,7 +25,7 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
 
     @Override
     public ExperienceCenterDTO saveExperienceCenter(ExperienceCenterSaveRequestDTO experienceCenterSaveRequestDTO) {
-        if(!experienceCenterRepo.existsByExperienceCodeEqualsIgnoreCase(experienceCenterSaveRequestDTO.getExperienceName())){
+        if(!experienceCenterRepo.existsByExperienceCodeEqualsIgnoreCase(experienceCenterSaveRequestDTO.getExperienceCode())){
             ExperienceCenter experienceCenter = modelMapper.map(experienceCenterSaveRequestDTO, ExperienceCenter.class);
             experienceCenterRepo.save(experienceCenter);
             return modelMapper.map(experienceCenter, ExperienceCenterDTO.class);

@@ -38,7 +38,7 @@ public class ExperienceCenter {
     @Column(name="is_available")
     private boolean isAvailable;
 
-    @OneToMany(mappedBy="experienceCenters", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="experienceCenter", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> events;
 
 }
