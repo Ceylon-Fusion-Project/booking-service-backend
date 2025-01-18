@@ -1,12 +1,16 @@
 package com.ceylone_fusion.booking_service.controller;
 
 import com.ceylone_fusion.booking_service.dto.RoomDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedRoomGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
+import com.ceylone_fusion.booking_service.entity.enums.RoomType;
 import com.ceylone_fusion.booking_service.service.RoomService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +58,59 @@ public class RoomController {
             );
         }
 
+    }
+
+
+    @GetMapping(
+            path = "/get-all-rooms-by-available",
+            params = {"page", "size", "isAvailable"}
+    )
+    public ResponseEntity<StandardResponse> getAllRoomWithSort(
+            @RequestParam(value = "isAvailable",defaultValue = "true",required = false) boolean isAvailable,
+            @RequestParam(value = "sort",required = false,defaultValue = "nameAsc") String sort,
+            @RequestParam(value = "page", defaultValue = "0",required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10",required = false) Integer size
+    ) {
+        try {
+            // Sort Specification
+            Sort sortSpec;
+            switch (sort) {
+                case "nameAsc":
+                    sortSpec = Sort.by("roomNumber").ascending();
+                    break;
+                case "nameDesc":
+                    sortSpec = Sort.by("roomNumber").descending();
+                    break;
+                case "typeAsc":
+                    sortSpec = Sort.by("roomType").ascending();
+                    break;
+                case "typeDesc":
+                    sortSpec = Sort.by("roomType").descending();
+                    break;
+                case "priceAsc":
+                    sortSpec = Sort.by("pricePerNight").ascending();
+                    break;
+                case "priceDesc":
+                    sortSpec = Sort.by("pricePerNight").descending();
+                    break;
+                default:
+                    sortSpec = Sort.by("roomNumber").ascending();
+            }
+
+            // Page Request Specification
+            PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
+
+            PaginatedRoomGetResponseDTO response = roomService.getAllRoomsSorted(isAvailable, pageRequest);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "All Rooms", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 
 
@@ -128,6 +185,52 @@ public class RoomController {
             String response = roomService.deleteRoomById(roomId);
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, response, "Room Deleted Successfully"),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+
+    @GetMapping(path = "/get-room-by-filtering")
+    public ResponseEntity<StandardResponse> getRoomByFiltering(
+            @RequestParam(required = false) RoomType roomType,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false,defaultValue = "true" ) boolean isAvailable,
+            @RequestParam(value = "sort",required = false,defaultValue = "nameAsc") String sort,
+            @RequestParam(required = false,defaultValue = "0") Integer page,
+            @RequestParam(required = false,defaultValue = "10") Integer size
+    ) {
+        try {
+            // Sort Specification
+            Sort sortSpec;
+            switch (sort) {
+                case "typeAsc":
+                    sortSpec = Sort.by("roomType").ascending();
+                    break;
+                case "typeDesc":
+                    sortSpec = Sort.by("roomType").descending();
+                    break;
+                case "priceAsc":
+                    sortSpec = Sort.by("pricePerNight").ascending();
+                    break;
+                case "priceDesc":
+                    sortSpec = Sort.by("pricePerNight").descending();
+                    break;
+                default:
+                    sortSpec = Sort.by("roomType").ascending();
+            }
+
+            // Page Request Specification
+            PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
+            PaginatedRoomGetResponseDTO response = roomService.getRoomByFiltering(roomType, minPrice, maxPrice, isAvailable, pageRequest);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "Room Found", response),
                     HttpStatus.OK
             );
         } catch (Exception e) {

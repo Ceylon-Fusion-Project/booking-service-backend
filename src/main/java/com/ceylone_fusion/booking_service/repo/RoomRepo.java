@@ -2,6 +2,8 @@ package com.ceylone_fusion.booking_service.repo;
 
 import com.ceylone_fusion.booking_service.entity.Accommodation;
 import com.ceylone_fusion.booking_service.entity.Room;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -19,4 +21,7 @@ public interface RoomRepo extends JpaRepository<Room, Long>, JpaSpecificationExe
 
     List<Room> findRoomByAccommodationIn(List<Accommodation> accommodations);
 
+    Page<Room> findAllByIsAvailableEquals(boolean isAvailable, Pageable pageable);
+
+    Long countRoomByIsAvailableEquals(boolean isAvailable);
 }

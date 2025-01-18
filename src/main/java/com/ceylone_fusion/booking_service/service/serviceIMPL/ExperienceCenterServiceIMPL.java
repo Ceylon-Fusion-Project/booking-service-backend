@@ -1,15 +1,21 @@
 package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.ExperienceCenterDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedExperienceCenterGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.ExperienceCenterSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.ExperienceCenterUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.ExperienceCenterGetResponseDTO;
 import com.ceylone_fusion.booking_service.entity.ExperienceCenter;
 import com.ceylone_fusion.booking_service.repo.ExperienceCenterRepo;
 import com.ceylone_fusion.booking_service.service.ExperienceCenterService;
+import com.ceylone_fusion.booking_service.util.mappers.ExperienceCenterMapper;
+import com.ceylone_fusion.booking_service.util.specifications.ExperienceCenterSpecifications;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +28,9 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ExperienceCenterMapper experienceCenterMapper;
 
     @Override
     public ExperienceCenterDTO saveExperienceCenter(ExperienceCenterSaveRequestDTO experienceCenterSaveRequestDTO) {
@@ -38,21 +47,42 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
     @Override
     public List<ExperienceCenterGetResponseDTO> getAllExperienceCenters() {
         List<ExperienceCenter> getAllExperienceCenters = experienceCenterRepo.findAll();
-        if(getAllExperienceCenters.size() > 0){
-            List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = modelMapper.map(getAllExperienceCenters, new TypeToken<List<ExperienceCenterGetResponseDTO>>(){}.getType());
-            return experienceCenterGetResponseDTOS;
+        if(!getAllExperienceCenters.isEmpty()){
+            return modelMapper.map(getAllExperienceCenters, new TypeToken<List<ExperienceCenterGetResponseDTO>>(){}.getType());
         }
         else{
             throw new RuntimeException("No Accommodations Found");
         }
     }
 
+
+    @Override
+    public PaginatedExperienceCenterGetResponseDTO getAllExperienceCentersSorted(boolean isAvailable, Pageable pageable) {
+        // Get all experience centers with available status
+        Page<ExperienceCenter> experienceCenters = experienceCenterRepo.findAllByIsAvailableEquals(isAvailable, pageable);
+        if (!experienceCenters.isEmpty()) {
+            // Map Experience Center Entity List to Experience Center DTO List
+            List<ExperienceCenterDTO> experienceCenterDTOS = experienceCenterMapper.ExperienceCenterEntityListToExperienceCenterDTOList(experienceCenters);
+
+            // Map Experience Center DTO List to ExperienceCenterGetResponseDTO List
+            List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = experienceCenterMapper.experienceCenterDTOListToExperienceCenterGetResponseDTOList(experienceCenterDTOS);
+
+
+            // Return PaginatedExperienceCenterGetResponseDTO
+            return new PaginatedExperienceCenterGetResponseDTO(
+                    experienceCenterGetResponseDTOS,
+                    experienceCenterRepo.countExperienceCenterByIsAvailableEquals(isAvailable)
+            );
+        } else {
+            throw new RuntimeException("No Experience Center Found");
+        }
+    }
+
     @Override
     public List<ExperienceCenterGetResponseDTO> getExperienceCenterById(Long experienceId) {
         List<ExperienceCenter> experienceCenters = experienceCenterRepo.findAllByExperienceIdEquals(experienceId);
-        if(experienceCenters.size() > 0) {
-            List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = modelMapper.map(experienceCenters, new TypeToken<List<ExperienceCenterGetResponseDTO>>(){}.getType());
-            return experienceCenterGetResponseDTOS;
+        if(!experienceCenters.isEmpty()) {
+            return modelMapper.map(experienceCenters, new TypeToken<List<ExperienceCenterGetResponseDTO>>(){}.getType());
         }
         else {
             throw new RuntimeException("No Experience Center Found");
@@ -62,9 +92,8 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
     @Override
     public List<ExperienceCenterGetResponseDTO> getExperienceCenterByCode(String experienceCode) {
         List<ExperienceCenter> experienceCenters = experienceCenterRepo.findAllByExperienceCodeEquals(experienceCode);
-        if(experienceCenters.size() > 0) {
-            List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = modelMapper.map(experienceCenters, new TypeToken<List<ExperienceCenterGetResponseDTO>>(){}.getType());
-            return experienceCenterGetResponseDTOS;
+        if(!experienceCenters.isEmpty()) {
+            return modelMapper.map(experienceCenters, new TypeToken<List<ExperienceCenterGetResponseDTO>>(){}.getType());
         }
         else {
             throw new RuntimeException("No Experience Center Found");
@@ -102,8 +131,8 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
             }
 
             // Update Experience Is Available
-            if (experienceCenterUpdateRequestDTO.isAvailable() != false) {
-                existingExperienceCenter.setAvailable(experienceCenterUpdateRequestDTO.isAvailable());
+            if (experienceCenterUpdateRequestDTO.isAvailable()) {
+                existingExperienceCenter.setAvailable(true);
             }
 
             //Save the updated Experience Center
@@ -126,6 +155,38 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
             return response;
         } else {
             throw new RuntimeException("Experience Center Not Found");
+        }
+    }
+
+
+    @Override
+    public PaginatedExperienceCenterGetResponseDTO getExperienceCenterByFiltering(
+            String experienceName,
+            String location,
+            boolean isAvailable,
+            Pageable pageable
+    ) {
+        Specification<ExperienceCenter> specification = Specification.
+                where(ExperienceCenterSpecifications.isAvailable(isAvailable))
+                .and(ExperienceCenterSpecifications.hasName(experienceName))
+                .and(ExperienceCenterSpecifications.hasLocation(location));
+
+        // Get all experience center with available
+        Page<ExperienceCenter> experienceCenters = experienceCenterRepo.findAll(specification, pageable);
+        if (!experienceCenters.isEmpty()) {
+            // Map Experience Center Entity List to Experience Center DTO List
+            List<ExperienceCenterDTO> experienceCenterDTOS = experienceCenterMapper.ExperienceCenterEntityListToExperienceCenterDTOList(experienceCenters);
+
+            // Map Experience Center DTO List to ExperienceCenterGetResponseDTO List
+            List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = experienceCenterMapper
+                    .experienceCenterDTOListToExperienceCenterGetResponseDTOList(experienceCenterDTOS);
+
+            return new PaginatedExperienceCenterGetResponseDTO(
+                    experienceCenterGetResponseDTOS,
+                    experienceCenterRepo.count(specification)
+            );
+        } else {
+            throw new RuntimeException("No Experience Center Found");
         }
     }
 

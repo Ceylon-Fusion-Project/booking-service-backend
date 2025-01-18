@@ -1,9 +1,12 @@
 package com.ceylone_fusion.booking_service.service;
 
 import com.ceylone_fusion.booking_service.dto.EventDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedEventGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.EventSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.EventGetResponseDTO;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface EventService {
@@ -17,4 +20,9 @@ public interface EventService {
     List<EventGetResponseDTO> getEventDetailsByExperienceId(Long experienceId);
 
     String deleteEventById(Long eventId);
+
+    PaginatedEventGetResponseDTO getAllEventsSorted(boolean isAvailable, Pageable pageable);
+
+    PaginatedEventGetResponseDTO getEventByFiltering(String eventName, Double minPrice, Double maxPrice, LocalTime startTime, LocalTime endTime, boolean isAvailable, Pageable pageable);
+
 }

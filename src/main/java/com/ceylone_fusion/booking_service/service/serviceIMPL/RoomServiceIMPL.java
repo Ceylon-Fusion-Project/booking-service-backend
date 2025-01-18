@@ -1,16 +1,23 @@
 package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.RoomDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedRoomGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
 import com.ceylone_fusion.booking_service.entity.Room;
+import com.ceylone_fusion.booking_service.entity.enums.RoomType;
 import com.ceylone_fusion.booking_service.repo.AccommodationRepo;
 import com.ceylone_fusion.booking_service.repo.RoomRepo;
 import com.ceylone_fusion.booking_service.service.RoomService;
+import com.ceylone_fusion.booking_service.util.mappers.RoomMapper;
+import com.ceylone_fusion.booking_service.util.specifications.RoomSpecifications;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +33,9 @@ public class RoomServiceIMPL implements RoomService {
 
     @Autowired
     private AccommodationRepo accommodationRepo;
+
+    @Autowired
+    private RoomMapper roomMapper;
 
 
     @Override
@@ -54,21 +64,43 @@ public class RoomServiceIMPL implements RoomService {
     @Override
     public List<RoomGetResponseDTO> getAllRooms() {
         List<Room> getAllRooms = roomRepo.findAll();
-        if(getAllRooms.size() > 0){
-            List<RoomGetResponseDTO> roomGetResponseDTOS = modelMapper.map(getAllRooms, new TypeToken<List<RoomGetResponseDTO>>(){}.getType());
-            return roomGetResponseDTOS;
+        if(!getAllRooms.isEmpty()){
+            return modelMapper.map(getAllRooms, new TypeToken<List<RoomGetResponseDTO>>(){}.getType());
         }
         else{
             throw new RuntimeException("No Rooms Found");
         }
     }
 
+
+    @Override
+    public PaginatedRoomGetResponseDTO getAllRoomsSorted(boolean isAvailable, Pageable pageable) {
+        // Get all rooms with is available
+        Page<Room> rooms = roomRepo.findAllByIsAvailableEquals(isAvailable, pageable);
+        if (!rooms.isEmpty()) {
+            // Map Room Entity List to Room DTO List
+            List<RoomDTO> roomDTOS = roomMapper.RoomEntityListToRoomDTOList(rooms);
+
+            // Map Room DTO List to RoomGetResponseDTO List
+            List<RoomGetResponseDTO> roomGetResponseDTOS = roomMapper.roomDTOListToRoomGetResponseDTOList(roomDTOS);
+
+
+            // Return PaginatedRoomGetResponseDTO
+            return new PaginatedRoomGetResponseDTO(
+                    roomGetResponseDTOS,
+                    roomRepo.countRoomByIsAvailableEquals(isAvailable)
+            );
+        } else {
+            throw new RuntimeException("No Room Found");
+        }
+    }
+
+
     @Override
     public List<RoomGetResponseDTO> getAllRoomDetailsById(Long roomId) {
         List<Room> rooms = roomRepo.findAllRoomsByRoomIdEquals(roomId);
-        if(rooms.size() > 0) {
-            List<RoomGetResponseDTO> roomGetResponseDTOS = modelMapper.map(rooms, new TypeToken<List<RoomGetResponseDTO>>(){}.getType());
-            return roomGetResponseDTOS;
+        if(!rooms.isEmpty()) {
+            return modelMapper.map(rooms, new TypeToken<List<RoomGetResponseDTO>>(){}.getType());
         }
         else {
             throw new RuntimeException("No Room Found");
@@ -79,9 +111,8 @@ public class RoomServiceIMPL implements RoomService {
     public List<RoomGetResponseDTO> getRoomDetailsByAccommodationId(Long accommodationId) {
         if (roomRepo.existsByAccommodation_AccommodationId(accommodationId)) {
             List<Room> rooms = roomRepo.findRoomByAccommodationIn((accommodationRepo.findRoomsByAccommodationIdEquals(accommodationId)));
-            if(rooms.size() > 0) {
-                List<RoomGetResponseDTO> roomGetResponseDTOS = modelMapper.map(rooms, new TypeToken<List<RoomGetResponseDTO>>(){}.getType());
-                return roomGetResponseDTOS;
+            if(!rooms.isEmpty()) {
+                return modelMapper.map(rooms, new TypeToken<List<RoomGetResponseDTO>>(){}.getType());
             }
             else {
                 throw new RuntimeException("No Room Found");
@@ -133,8 +164,8 @@ public class RoomServiceIMPL implements RoomService {
             }
 
             // Update Is Available
-            if (roomUpdateRequestDTO.isAvailable() != false ) {
-                existingRoom.setAvailable(roomUpdateRequestDTO.isAvailable());
+            if (roomUpdateRequestDTO.isAvailable()) {
+                existingRoom.setAvailable(true);
             }
 
             // Save the updated Room
@@ -157,6 +188,39 @@ public class RoomServiceIMPL implements RoomService {
             return response;
         } else {
             throw new RuntimeException("Room Not Found");
+        }
+    }
+
+
+    @Override
+    public PaginatedRoomGetResponseDTO getRoomByFiltering(
+            RoomType roomType,
+            Double minPrice,
+            Double maxPrice,
+            boolean isAvailable,
+            Pageable pageable
+    ) {
+        Specification<Room> specification = Specification.
+                where(RoomSpecifications.isAvailable(isAvailable))
+                .and(RoomSpecifications.hasType(roomType))
+                .and(RoomSpecifications.hasPriceRange(minPrice, maxPrice));
+
+        // Get all rooms with available
+        Page<Room> rooms = roomRepo.findAll(specification, pageable);
+        if (!rooms.isEmpty()) {
+            // Map Room Entity List to Room DTO List
+            List<RoomDTO> roomDTOS = roomMapper.RoomEntityListToRoomDTOList(rooms);
+
+            // Map Room DTO List to RoomGetResponseDTO List
+            List<RoomGetResponseDTO> roomGetResponseDTOS = roomMapper
+                    .roomDTOListToRoomGetResponseDTOList(roomDTOS);
+
+            return new PaginatedRoomGetResponseDTO(
+                    roomGetResponseDTOS,
+                    roomRepo.count(specification)
+            );
+        } else {
+            throw new RuntimeException("No Room Found");
         }
     }
 
