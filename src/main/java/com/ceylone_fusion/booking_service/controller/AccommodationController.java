@@ -1,12 +1,16 @@
 package com.ceylone_fusion.booking_service.controller;
 
 import com.ceylone_fusion.booking_service.dto.AccommodationDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedAccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.AccommodationSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.AccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
+import com.ceylone_fusion.booking_service.entity.enums.AccommodationType;
 import com.ceylone_fusion.booking_service.service.AccommodationService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +58,59 @@ public class AccommodationController {
             );
         }
 
+    }
+
+
+    @GetMapping(
+            path = "/get-all-accommodations-by-available",
+            params = {"page", "size", "isAvailable"}
+    )
+    public ResponseEntity<StandardResponse> getAllAccommodationWithSort(
+            @RequestParam(value = "isAvailable",defaultValue = "true",required = false) boolean isAvailable,
+            @RequestParam(value = "sort",required = false,defaultValue = "nameAsc") String sort,
+            @RequestParam(value = "page", defaultValue = "0",required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10",required = false) Integer size
+    ) {
+        try {
+            // Sort Specification
+            Sort sortSpec;
+            switch (sort) {
+                case "nameAsc":
+                    sortSpec = Sort.by("accommodationName").ascending();
+                    break;
+                case "nameDesc":
+                    sortSpec = Sort.by("accommodationName").descending();
+                    break;
+                case "typeAsc":
+                    sortSpec = Sort.by("accommodationType").ascending();
+                    break;
+                case "typeDesc":
+                    sortSpec = Sort.by("accommodationType").descending();
+                    break;
+                case "locationAsc":
+                    sortSpec = Sort.by("location").ascending();
+                    break;
+                case "locationDesc":
+                    sortSpec = Sort.by("location").descending();
+                    break;
+                default:
+                    sortSpec = Sort.by("accommodationName").ascending();
+            }
+
+            // Page Request Specification
+            PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
+
+            PaginatedAccommodationGetResponseDTO response = accommodationService.getAllAccommodationsSorted(isAvailable, pageRequest);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "All Accommodations", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 
 
@@ -139,6 +196,57 @@ public class AccommodationController {
         }
     }
 
+
+    @GetMapping(path = "/get-accommodation-by-filtering")
+    public ResponseEntity<StandardResponse> getAccommodationByFiltering(
+            @RequestParam(required = false) String accommodationName,
+            @RequestParam(required = false) AccommodationType accommodationType,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false,defaultValue = "true" ) boolean isAvailable,
+            @RequestParam(value = "sort",required = false,defaultValue = "nameAsc") String sort,
+            @RequestParam(required = false,defaultValue = "0") Integer page,
+            @RequestParam(required = false,defaultValue = "10") Integer size
+    ) {
+        try {
+            // Sort Specification
+            Sort sortSpec;
+            switch (sort) {
+                case "nameAsc":
+                    sortSpec = Sort.by("accommodationName").ascending();
+                    break;
+                case "nameDesc":
+                    sortSpec = Sort.by("accommodationName").descending();
+                    break;
+                case "typeAsc":
+                    sortSpec = Sort.by("accommodationType").ascending();
+                    break;
+                case "typeDesc":
+                    sortSpec = Sort.by("accommodationType").descending();
+                    break;
+                case "locationAsc":
+                    sortSpec = Sort.by("location").ascending();
+                    break;
+                case "locationDesc":
+                    sortSpec = Sort.by("location").descending();
+                    break;
+                default:
+                    sortSpec = Sort.by("accommodationName").ascending();
+            }
+
+            // Page Request Specification
+            PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
+            PaginatedAccommodationGetResponseDTO response = accommodationService.getAccommodationByFiltering(accommodationName, accommodationType, location, isAvailable, pageRequest);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "Accommodation Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
 }
 

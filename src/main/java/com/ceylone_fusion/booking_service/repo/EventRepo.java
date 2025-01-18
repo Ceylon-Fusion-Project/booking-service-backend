@@ -2,6 +2,8 @@ package com.ceylone_fusion.booking_service.repo;
 
 import com.ceylone_fusion.booking_service.entity.Event;
 import com.ceylone_fusion.booking_service.entity.ExperienceCenter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -19,4 +21,7 @@ public interface EventRepo extends JpaRepository<Event, Long>, JpaSpecificationE
 
     List<Event> findEventByExperienceCenterIn(List<ExperienceCenter> experienceCenters);
 
+    Page<Event> findAllByIsAvailableEquals(boolean isAvailable, Pageable pageable);
+
+    Long countEventByIsAvailableEquals(boolean isAvailable);
 }

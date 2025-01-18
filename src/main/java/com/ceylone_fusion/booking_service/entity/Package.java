@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -38,11 +38,11 @@ public class Package {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PackageAccommodation> packageAccommodations;
@@ -54,6 +54,6 @@ public class Package {
     private Booking booking;
 
     @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookingRating> ratings;
+    private List<PackageRating> ratings;
 
 }
