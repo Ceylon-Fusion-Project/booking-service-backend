@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "experience_centers")
@@ -38,6 +38,6 @@ public class ExperienceCenter {
     private boolean isAvailable;
 
     @OneToMany(mappedBy="experienceCenter", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Event> events;
+    private List<Event> events;
 
 }

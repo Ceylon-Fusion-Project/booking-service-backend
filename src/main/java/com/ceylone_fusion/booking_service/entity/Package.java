@@ -21,11 +21,11 @@ public class Package {
 
     @Id
     @Column(name = "package_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long packageId;
 
-    @Column(name="title", nullable = false)
-    private String title;
+    @Column(name="package_name", nullable = false)
+    private String packageName;
 
     @Column(name="description")
     private String description;

@@ -3,6 +3,7 @@ package com.ceylone_fusion.booking_service.service;
 import com.ceylone_fusion.booking_service.dto.EventDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedEventGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.EventSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.request.EventUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.EventGetResponseDTO;
 import org.springframework.data.domain.Pageable;
 
@@ -25,4 +26,5 @@ public interface EventService {
 
     PaginatedEventGetResponseDTO getEventByFiltering(String eventName, Double minPrice, Double maxPrice, LocalTime startTime, LocalTime endTime, boolean isAvailable, Pageable pageable);
 
+    EventDTO updateEventDetails(EventUpdateRequestDTO eventUpdateRequestDTO, Long eventId);
 }

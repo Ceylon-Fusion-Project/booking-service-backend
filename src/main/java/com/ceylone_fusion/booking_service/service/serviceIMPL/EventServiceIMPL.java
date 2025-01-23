@@ -3,6 +3,7 @@ package com.ceylone_fusion.booking_service.service.serviceIMPL;
 import com.ceylone_fusion.booking_service.dto.EventDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedEventGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.EventSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.request.EventUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.EventGetResponseDTO;
 import com.ceylone_fusion.booking_service.entity.Event;
 import com.ceylone_fusion.booking_service.repo.EventRepo;
@@ -119,6 +120,56 @@ public class EventServiceIMPL implements EventService {
         }
     }
 
+
+    @Override
+    public EventDTO updateEventDetails(
+            EventUpdateRequestDTO eventUpdateRequestDTO,
+            Long eventId
+    ) {
+        //Get event by Event ID
+        if (eventRepo.existsById(eventId)) {
+            // Get Event by Event ID and Map Event Entity to Event DTO
+            Event existingEvent = eventRepo.getReferenceById(eventId);
+
+            // Update Event Image URLs
+            if (eventUpdateRequestDTO.getEventImageURLs() != null) {
+                existingEvent.setEventImageURLs(eventUpdateRequestDTO.getEventImageURLs());
+            }
+
+            // Update Event Description
+            if (eventUpdateRequestDTO.getEventDescription() != null) {
+                existingEvent.setEventDescription(eventUpdateRequestDTO.getEventDescription());
+            }
+
+            // Update Price Per Event
+            if (eventUpdateRequestDTO.getPricePerEvent() != null) {
+                existingEvent.setPricePerEvent(eventUpdateRequestDTO.getPricePerEvent());
+            }
+
+            // Update Is Available
+            if (eventUpdateRequestDTO.isAvailable()) {
+                existingEvent.setAvailable(true);
+            }
+
+            // Update Event Start Time
+            if (eventUpdateRequestDTO.getStartTime() != null) {
+                existingEvent.setStartTime(eventUpdateRequestDTO.getStartTime());
+            }
+
+            // Update Event End Time
+            if (eventUpdateRequestDTO.getEndTime() != null) {
+                existingEvent.setEndTime(eventUpdateRequestDTO.getEndTime());
+            }
+
+            // Save the updated Event
+            eventRepo.save(existingEvent);
+
+            return modelMapper.map(existingEvent, EventDTO.class);
+        } else {
+            throw new RuntimeException("Event Not Found");
+        }
+    }
+
     @Override
     public String deleteEventById(Long eventId) {
         // Get Event by Event ID
@@ -168,5 +219,7 @@ public class EventServiceIMPL implements EventService {
             throw new RuntimeException("No Event Found");
         }
     }
+
+
 
 }

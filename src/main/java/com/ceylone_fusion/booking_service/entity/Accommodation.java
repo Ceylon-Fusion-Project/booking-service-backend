@@ -42,4 +42,7 @@ public class Accommodation {
     @OneToMany(mappedBy="accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> rooms;
 
+    @OneToMany(mappedBy="accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PackageAccommodation> packageAccommodations;
+
 }

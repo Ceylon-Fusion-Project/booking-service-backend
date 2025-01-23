@@ -17,7 +17,7 @@ public class PackageRating {
 
     @Id
     @Column(name = "rating_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long ratingId;
 
     @Column(name = "user_name", nullable = false)
