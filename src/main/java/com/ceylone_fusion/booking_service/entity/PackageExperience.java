@@ -14,7 +14,7 @@ public class PackageExperience {
 
     @Id
     @Column(name = "package_experience_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long PackageExperienceId;
 
     @Column(name = "quantity", nullable = false)

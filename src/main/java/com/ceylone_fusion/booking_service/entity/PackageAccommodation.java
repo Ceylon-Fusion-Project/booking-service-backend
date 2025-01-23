@@ -14,8 +14,8 @@ public class PackageAccommodation {
 
     @Id
     @Column(name = "package_accommodation_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PackageAccommodationId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long packageAccommodationId;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -23,5 +23,9 @@ public class PackageAccommodation {
     @ManyToOne
     @JoinColumn(name="package_id", nullable=false)
     private Package packages;
+
+    @ManyToOne
+    @JoinColumn(name="accommodation_id", nullable=false)
+    private Accommodation accommodation;
 
 }

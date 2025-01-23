@@ -3,6 +3,7 @@ package com.ceylone_fusion.booking_service.controller;
 import com.ceylone_fusion.booking_service.dto.EventDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedEventGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.EventSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.request.EventUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.EventGetResponseDTO;
 import com.ceylone_fusion.booking_service.service.EventService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
@@ -148,6 +149,28 @@ public class EventController {
         }
     }
 
+
+    @PatchMapping(
+            path = "/update-event-details",
+            params = "id"
+    )
+    public ResponseEntity<StandardResponse> updateEventDetails(
+            @RequestBody EventUpdateRequestDTO eventUpdateRequestDTO,
+            @RequestParam(value = "id") Long eventId
+    ) {
+        try {
+            EventDTO response = eventService.updateEventDetails(eventUpdateRequestDTO, eventId);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "Event Updated Successfully", response.getEventName()),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @DeleteMapping(
             path = "/delete-event-by-id",
