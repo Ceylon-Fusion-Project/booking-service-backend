@@ -40,4 +40,7 @@ public class ExperienceCenter {
     @OneToMany(mappedBy="experienceCenter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Event> events;
 
+    @OneToMany(mappedBy="experience", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PackageExperience> packageExperiences;
+
 }
