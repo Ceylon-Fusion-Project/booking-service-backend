@@ -2,12 +2,17 @@ package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.PackageDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
+import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.entity.Package;
 import com.ceylone_fusion.booking_service.repo.PackageRepo;
 import com.ceylone_fusion.booking_service.service.PackageService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PackageServiceIMPL implements PackageService {
@@ -34,4 +39,109 @@ public class PackageServiceIMPL implements PackageService {
         }
 
     }
+
+    @Override
+    public List<PackageGetResponseDTO> getAllPackage() {
+        List<Package> getAllPackages = packageRepo.findAll();
+        if(!getAllPackages.isEmpty()){
+            return modelMapper.map(getAllPackages, new TypeToken<List<PackageGetResponseDTO>>(){}.getType());
+        }
+        else{
+            throw new RuntimeException("No Packages Found");
+        }
+    }
+
+    @Override
+    public List<PackageGetResponseDTO> getPackageById(Long packageId) {
+        List<Package> packages = packageRepo.findAllByPackageIdEquals(packageId);
+        if(!packages.isEmpty()) {
+            return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>(){}.getType());
+        }
+        else {
+            throw new RuntimeException("No Package Found");
+        }
+    }
+
+    @Override
+    public List<PackageGetResponseDTO> getAllPackageDetails(
+            String packageName,
+            boolean isPredefined,
+            Double minPrice,
+            Double maxPrice
+    ) {
+
+        List<Package> packages;
+
+        // Apply filters based on input parameters
+        if (packageName != null && !packageName.isEmpty()) {
+            packages = packageRepo.findByPackageName(packageName);
+        } else if (minPrice != null && maxPrice != null) {
+            packages = packageRepo.findByPriceBetween(minPrice, maxPrice);
+        } else if (minPrice != null) {
+            packages = packageRepo.findByPriceGreaterThanEqual(minPrice);
+        } else if (maxPrice != null) {
+            packages = packageRepo.findByPriceLessThanEqual(maxPrice);
+        } else {
+            packages = packageRepo.findAll(); // Retrieve all packages if no filters are applied
+        }
+
+        // Handle empty or null results
+        if (packages == null || packages.isEmpty()) {
+            throw new RuntimeException("No packages found matching the criteria.");
+        }
+
+        // Map Package entities to DTOs
+        return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>() {}.getType());
+    }
+
+    @Override
+    public PackageDTO updatePackageDetails(PackageUpdateRequestDTO packageUpdateRequestDTO, Long packageId) {
+        //Get package by Package ID
+        if (packageRepo.existsById(packageId)) {
+            // Get Package by Package ID and Map Package Entity to Package DTO
+            Package existingPackage = packageRepo.getReferenceById(packageId);
+
+            // Update Package name
+            if (packageUpdateRequestDTO.getPackageName() != null) {
+                existingPackage.setPackageName(packageUpdateRequestDTO.getPackageName());
+            }
+
+            // Update Package Description
+            if (packageUpdateRequestDTO.getDescription() != null) {
+                existingPackage.setDescription(packageUpdateRequestDTO.getDescription());
+            }
+
+            // Update Package Price
+            if (packageUpdateRequestDTO.getPrice() != null) {
+                existingPackage.setPrice(packageUpdateRequestDTO.getPrice());
+            }
+
+            // Update Package Is Predefined
+            if (packageUpdateRequestDTO.isPredefined()) {
+                existingPackage.setPredefined(true);
+            }
+
+            // Save the updated Package
+            packageRepo.save(existingPackage);
+
+            return modelMapper.map(existingPackage, PackageDTO.class);
+        } else {
+            throw new RuntimeException("Package Not Found");
+        }
+    }
+
+    @Override
+    public String deletePackageById(Long packageId) {
+        // Get Package by Package ID
+        if (packageRepo.existsById(packageId)) {
+            String response = packageRepo.getReferenceById(packageId).getPackageName() + " Deleted!";
+
+            //delete package
+            packageRepo.deleteById(packageId);
+            return response;
+        } else {
+            throw new RuntimeException("Package Not Found");
+        }
+    }
+
 }

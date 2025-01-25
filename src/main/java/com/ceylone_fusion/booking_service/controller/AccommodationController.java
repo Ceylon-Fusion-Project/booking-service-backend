@@ -57,7 +57,6 @@ public class AccommodationController {
                     HttpStatus.NOT_FOUND
             );
         }
-
     }
 
 
@@ -174,7 +173,6 @@ public class AccommodationController {
                     HttpStatus.NOT_FOUND
             );
         }
-
     }
 
     @DeleteMapping(

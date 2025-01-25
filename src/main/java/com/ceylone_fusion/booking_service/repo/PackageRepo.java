@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @EnableJpaRepositories
 public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificationExecutor<Package> {
@@ -14,4 +16,13 @@ public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificat
 
     boolean existsByPackageNameIgnoreCase(String packageName);
 
+    List<Package> findAllByPackageIdEquals(Long packageId);
+
+    List<Package> findByPackageName(String packageName);
+
+    List<Package> findByPriceBetween(Double minPrice, Double maxPrice);
+
+    List<Package> findByPriceGreaterThanEqual(Double minPrice);
+
+    List<Package> findByPriceLessThanEqual(Double maxPrice);
 }
