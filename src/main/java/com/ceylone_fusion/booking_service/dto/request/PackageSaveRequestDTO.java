@@ -11,7 +11,7 @@ public class PackageSaveRequestDTO {
 
     private String packageName;
     private String description;
-    private Double price;
+    private Double pricePerDay;
     private boolean isPredefined;
 
 }

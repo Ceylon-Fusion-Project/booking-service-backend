@@ -76,11 +76,11 @@ public class PackageServiceIMPL implements PackageService {
         if (packageName != null && !packageName.isEmpty()) {
             packages = packageRepo.findByPackageName(packageName);
         } else if (minPrice != null && maxPrice != null) {
-            packages = packageRepo.findByPriceBetween(minPrice, maxPrice);
+            packages = packageRepo.findByPricePerDayBetween(minPrice, maxPrice);
         } else if (minPrice != null) {
-            packages = packageRepo.findByPriceGreaterThanEqual(minPrice);
+            packages = packageRepo.findByPricePerDayGreaterThanEqual(minPrice);
         } else if (maxPrice != null) {
-            packages = packageRepo.findByPriceLessThanEqual(maxPrice);
+            packages = packageRepo.findByPricePerDayLessThanEqual(maxPrice);
         } else {
             packages = packageRepo.findAll(); // Retrieve all packages if no filters are applied
         }
@@ -112,8 +112,8 @@ public class PackageServiceIMPL implements PackageService {
             }
 
             // Update Package Price
-            if (packageUpdateRequestDTO.getPrice() != null) {
-                existingPackage.setPrice(packageUpdateRequestDTO.getPrice());
+            if (packageUpdateRequestDTO.getPricePerDay() != null) {
+                existingPackage.setPricePerDay(packageUpdateRequestDTO.getPricePerDay());
             }
 
             // Update Package Is Predefined

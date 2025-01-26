@@ -58,7 +58,6 @@ public class RoomServiceIMPL implements RoomService {
         } else {
             throw new RuntimeException("Accommodation Not Found");
         }
-
     }
 
     @Override

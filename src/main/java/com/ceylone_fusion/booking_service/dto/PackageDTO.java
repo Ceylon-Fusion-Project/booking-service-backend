@@ -14,7 +14,7 @@ public class PackageDTO {
     private Long packageId;
     private String packageName;
     private String description;
-    private Double price;
+    private Double pricePerDay;
     private boolean isPredefined;
     private LocalDate createdAt;
     private LocalDate updatedAt;

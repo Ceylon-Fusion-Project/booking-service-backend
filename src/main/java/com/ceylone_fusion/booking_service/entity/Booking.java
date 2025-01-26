@@ -50,4 +50,13 @@ public class Booking {
     @JoinColumn(name="package_id", nullable=false)
     private Package packages;
 
+
+    public Booking(Long userId, StatusType statusType, LocalDateTime checkInDate, LocalDateTime checkOutDate, Double totalCost, Package packages) {
+        this.userId = userId;
+        this.statusType = statusType;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.totalCost = totalCost;
+        this.packages = packages;
+    }
 }
