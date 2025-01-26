@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/accommodation")
+@RequestMapping("api/v1/accommodations")
 @CrossOrigin
 public class AccommodationController {
 

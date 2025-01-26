@@ -20,9 +20,9 @@ public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificat
 
     List<Package> findByPackageName(String packageName);
 
-    List<Package> findByPriceBetween(Double minPrice, Double maxPrice);
+    List<Package> findByPricePerDayBetween(Double minPrice, Double maxPrice);
 
-    List<Package> findByPriceGreaterThanEqual(Double minPrice);
+    List<Package> findByPricePerDayGreaterThanEqual(Double minPrice);
 
-    List<Package> findByPriceLessThanEqual(Double maxPrice);
+    List<Package> findByPricePerDayLessThanEqual(Double maxPrice);
 }

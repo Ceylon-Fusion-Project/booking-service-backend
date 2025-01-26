@@ -31,7 +31,7 @@ public class Package {
     private String description;
 
     @Column(name="price", nullable = false)
-    private Double price;
+    private Double pricePerDay;
 
     @Column(name = "is_predefined")
     private boolean isPredefined;

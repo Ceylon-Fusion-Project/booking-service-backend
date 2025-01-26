@@ -35,7 +35,6 @@ public class AccommodationServiceIMPL implements AccommodationService {
 
     @Override
     public AccommodationDTO saveAccommodation(AccommodationSaveRequestDTO accommodationSaveRequestDTO) {
-
         if(!accommodationRepo.existsByAccommodationCodeEqualsIgnoreCase(accommodationSaveRequestDTO.getAccommodationCode())){
             Accommodation accommodation = modelMapper.map(accommodationSaveRequestDTO, Accommodation.class);
             accommodationRepo.save(accommodation);
