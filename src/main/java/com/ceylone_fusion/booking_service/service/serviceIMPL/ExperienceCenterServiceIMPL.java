@@ -55,6 +55,24 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
         }
     }
 
+    @Override
+    public PaginatedExperienceCenterGetResponseDTO getAllExperienceCentersPaginated(Pageable pageable) {
+        // Fetch paginated experience centers
+        Page<ExperienceCenter> experienceCentersPage = experienceCenterRepo.findAll(pageable);
+        if (experienceCentersPage.hasContent()) {
+            // Convert Page<ExperienceCenters> to List<ExperienceCenterGetResponseDTO>
+            List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = experienceCentersPage.getContent().stream()
+                    .map(experienceCenter -> modelMapper.map(experienceCenter, ExperienceCenterGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedExperienceCenterGetResponseDTO(
+                    experienceCenterGetResponseDTOS,
+                    experienceCentersPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Experience Centers Found");
+        }
+    }
 
     @Override
     public PaginatedExperienceCenterGetResponseDTO getAllExperienceCentersSorted(boolean isAvailable, Pageable pageable) {
@@ -63,11 +81,8 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
         if (!experienceCenters.isEmpty()) {
             // Map Experience Center Entity List to Experience Center DTO List
             List<ExperienceCenterDTO> experienceCenterDTOS = experienceCenterMapper.ExperienceCenterEntityListToExperienceCenterDTOList(experienceCenters);
-
             // Map Experience Center DTO List to ExperienceCenterGetResponseDTO List
             List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = experienceCenterMapper.experienceCenterDTOListToExperienceCenterGetResponseDTOList(experienceCenterDTOS);
-
-
             // Return PaginatedExperienceCenterGetResponseDTO
             return new PaginatedExperienceCenterGetResponseDTO(
                     experienceCenterGetResponseDTOS,
@@ -109,35 +124,28 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
         if (experienceCenterRepo.existsById(experienceId)) {
             // Get Experience Center by Experience ID and Map Experience Center Entity to Experience Center DTO
             ExperienceCenter existingExperienceCenter = experienceCenterRepo.getReferenceById(experienceId);
-
             // Update Experience name
             if (experienceCenterUpdateRequestDTO.getExperienceName() != null) {
                 existingExperienceCenter.setExperienceName(experienceCenterUpdateRequestDTO.getExperienceName());
             }
-
             // Update Experience Description
             if (experienceCenterUpdateRequestDTO.getExperienceDescription() != null) {
                 existingExperienceCenter.setExperienceDescription(experienceCenterUpdateRequestDTO.getExperienceDescription());
             }
-
             // Update Experience Location
             if (experienceCenterUpdateRequestDTO.getLocation() != null) {
                 existingExperienceCenter.setLocation(experienceCenterUpdateRequestDTO.getLocation());
             }
-
             // Update Experience Total Cost
             if (experienceCenterUpdateRequestDTO.getTotalPrice() != null) {
                 existingExperienceCenter.setTotalPrice(experienceCenterUpdateRequestDTO.getTotalPrice());
             }
-
             // Update Experience Is Available
             if (experienceCenterUpdateRequestDTO.isAvailable()) {
                 existingExperienceCenter.setAvailable(true);
             }
-
             //Save the updated Experience Center
             experienceCenterRepo.save(existingExperienceCenter);
-
             return modelMapper.map(existingExperienceCenter, ExperienceCenterDTO.class);
         } else {
             throw new RuntimeException("Experience Center Not Found");
@@ -149,7 +157,6 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
         // Get Experience Center by Experience ID
         if (experienceCenterRepo.existsById(experienceId)) {
             String response = experienceCenterRepo.getReferenceById(experienceId).getExperienceName() + " Deleted!";
-
             //delete experience center
             experienceCenterRepo.deleteById(experienceId);
             return response;
@@ -157,7 +164,6 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
             throw new RuntimeException("Experience Center Not Found");
         }
     }
-
 
     @Override
     public PaginatedExperienceCenterGetResponseDTO getExperienceCenterByFiltering(
@@ -170,17 +176,14 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
                 where(ExperienceCenterSpecifications.isAvailable(isAvailable))
                 .and(ExperienceCenterSpecifications.hasName(experienceName))
                 .and(ExperienceCenterSpecifications.hasLocation(location));
-
         // Get all experience center with available
         Page<ExperienceCenter> experienceCenters = experienceCenterRepo.findAll(specification, pageable);
         if (!experienceCenters.isEmpty()) {
             // Map Experience Center Entity List to Experience Center DTO List
             List<ExperienceCenterDTO> experienceCenterDTOS = experienceCenterMapper.ExperienceCenterEntityListToExperienceCenterDTOList(experienceCenters);
-
             // Map Experience Center DTO List to ExperienceCenterGetResponseDTO List
             List<ExperienceCenterGetResponseDTO> experienceCenterGetResponseDTOS = experienceCenterMapper
                     .experienceCenterDTOListToExperienceCenterGetResponseDTOList(experienceCenterDTOS);
-
             return new PaginatedExperienceCenterGetResponseDTO(
                     experienceCenterGetResponseDTOS,
                     experienceCenterRepo.count(specification)
@@ -189,6 +192,5 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
             throw new RuntimeException("No Experience Center Found");
         }
     }
-
 
 }

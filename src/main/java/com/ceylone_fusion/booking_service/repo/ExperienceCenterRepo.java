@@ -29,4 +29,5 @@ public interface ExperienceCenterRepo extends JpaRepository<ExperienceCenter, Lo
     Long countExperienceCenterByIsAvailableEquals(boolean isAvailable);
 
     ExperienceCenter findExperienceByExperienceIdEquals(Long experienceId);
+
 }

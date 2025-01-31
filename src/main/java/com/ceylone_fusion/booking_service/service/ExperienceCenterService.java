@@ -27,4 +27,7 @@ public interface ExperienceCenterService {
     PaginatedExperienceCenterGetResponseDTO getAllExperienceCentersSorted(boolean isAvailable, Pageable pageable);
 
     PaginatedExperienceCenterGetResponseDTO getExperienceCenterByFiltering(String experienceName, String location, boolean isAvailable, Pageable pageable);
+
+    PaginatedExperienceCenterGetResponseDTO getAllExperienceCentersPaginated(Pageable pageable);
+
 }
