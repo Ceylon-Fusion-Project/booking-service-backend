@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccommodationServiceIMPL implements AccommodationService {
@@ -53,6 +54,28 @@ public class AccommodationServiceIMPL implements AccommodationService {
             return modelMapper.map(getAllAccommodations, new TypeToken<List<AccommodationGetResponseDTO>>(){}.getType());
         }
         else{
+            throw new RuntimeException("No Accommodations Found");
+        }
+    }
+
+
+    @Override
+    public PaginatedAccommodationGetResponseDTO getAllAccommodationsPaginated(Pageable pageable) {
+        // Fetch paginated accommodations
+        Page<Accommodation> accommodationsPage = accommodationRepo.findAll(pageable);
+
+        if (accommodationsPage.hasContent()) {
+            // Convert Page<Accommodation> to List<AccommodationGetResponseDTO>
+            List<AccommodationGetResponseDTO> accommodationGetResponseDTOS = accommodationsPage.getContent().stream()
+                    .map(accommodation -> modelMapper.map(accommodation, AccommodationGetResponseDTO.class))
+                    .collect(Collectors.toList());
+
+            // Return paginated response
+            return new PaginatedAccommodationGetResponseDTO(
+                    accommodationGetResponseDTOS,
+                    accommodationsPage.getTotalElements()
+            );
+        } else {
             throw new RuntimeException("No Accommodations Found");
         }
     }
@@ -194,6 +217,7 @@ public class AccommodationServiceIMPL implements AccommodationService {
             throw new RuntimeException("No Accommodation Found");
         }
     }
+
 
 
 

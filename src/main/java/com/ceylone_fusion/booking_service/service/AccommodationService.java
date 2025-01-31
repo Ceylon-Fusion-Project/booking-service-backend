@@ -26,4 +26,6 @@ public interface AccommodationService {
     PaginatedAccommodationGetResponseDTO getAllAccommodationsSorted(boolean isAvailable, Pageable pageable);
 
     PaginatedAccommodationGetResponseDTO getAccommodationByFiltering(String accommodationName, AccommodationType accommodationType, String location, boolean isAvailable, Pageable pageable);
+
+    PaginatedAccommodationGetResponseDTO getAllAccommodationsPaginated(Pageable pageable);
 }
