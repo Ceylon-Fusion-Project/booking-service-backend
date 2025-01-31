@@ -25,4 +25,6 @@ public interface EventRepo extends JpaRepository<Event, Long>, JpaSpecificationE
 
     Long countEventByIsAvailableEquals(boolean isAvailable);
 
+    Page<Event> findByExperienceCenter_ExperienceId(Long experienceId, Pageable pageable);
+
 }

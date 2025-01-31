@@ -134,6 +134,25 @@ public class EventServiceIMPL implements EventService {
     }
 
     @Override
+    public PaginatedEventGetResponseDTO getEventsByExperienceIdPaginated(Long experienceId, Pageable pageable) {
+        // Fetch paginated events
+        Page<Event> eventsPage = eventRepo.findByExperienceCenter_ExperienceId(experienceId, pageable);
+        if (eventsPage.hasContent()) {
+            // Convert Page<Event> to List<EventGetResponseDTO>
+            List<EventGetResponseDTO> eventGetResponseDTOS = eventsPage.getContent().stream()
+                    .map(event -> modelMapper.map(event, EventGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedEventGetResponseDTO(
+                    eventGetResponseDTOS,
+                    eventsPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Events Found");
+        }
+    }
+
+    @Override
     public EventDTO updateEventDetails(
             EventUpdateRequestDTO eventUpdateRequestDTO,
             Long eventId
