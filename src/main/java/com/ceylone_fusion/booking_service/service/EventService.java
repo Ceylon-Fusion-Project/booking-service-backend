@@ -30,4 +30,6 @@ public interface EventService {
 
     PaginatedEventGetResponseDTO getAllEventsPaginated(Pageable pageable);
 
+    PaginatedEventGetResponseDTO getEventsByExperienceIdPaginated(Long experienceId, Pageable pageable);
+
 }

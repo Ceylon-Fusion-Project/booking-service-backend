@@ -153,11 +153,33 @@ public class EventController {
         try {
             List<EventGetResponseDTO> response = eventService.getEventDetailsByExperienceId(experienceId);
             return new ResponseEntity<StandardResponse>(
-                    new StandardResponse(200, "Event Found", response),
+                    new StandardResponse(200, "Events Found", response),
                     HttpStatus.OK
             );
         } catch (Exception e) {
             return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @GetMapping(path = "/get-events-by-experience-id-paginated")
+    public ResponseEntity<StandardResponse> getAllEvents(
+            @RequestParam(value = "experienceId") Long experienceId,
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedEventGetResponseDTO response = eventService.getEventsByExperienceIdPaginated(experienceId, pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Events Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
                     new StandardResponse(404, e.getMessage(), null),
                     HttpStatus.NOT_FOUND
             );
