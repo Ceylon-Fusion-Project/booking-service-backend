@@ -1,6 +1,9 @@
 package com.ceylone_fusion.booking_service.repo;
 
 import com.ceylone_fusion.booking_service.entity.Package;
+import com.ceylone_fusion.booking_service.entity.PackageRating;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -11,8 +14,6 @@ import java.util.List;
 @Repository
 @EnableJpaRepositories
 public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificationExecutor<Package> {
-
-    Package findPackageByPackageId(Long packageId);
 
     boolean existsByPackageNameIgnoreCase(String packageName);
 
@@ -25,4 +26,9 @@ public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificat
     List<Package> findByPricePerDayGreaterThanEqual(Double minPrice);
 
     List<Package> findByPricePerDayLessThanEqual(Double maxPrice);
+
+    Package findByPackageId(Long packageId);
+
+    Package findPackagesByPackageIdEquals(Long packageId);
+
 }

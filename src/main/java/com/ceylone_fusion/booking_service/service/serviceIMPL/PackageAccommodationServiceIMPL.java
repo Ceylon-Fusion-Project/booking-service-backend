@@ -42,7 +42,7 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
             PackageAccommodation packageAccommodation = new PackageAccommodation(
                     null, // ID is auto-generated
                     packageAccommodationSaveRequestDTO.getQuantity(),
-                    packageRepo.findPackageByPackageId(packageId), // Find the Package entity
+                    packageRepo.findPackagesByPackageIdEquals(packageId), // Find the Package entity
                     accommodationRepo.findAccommodationByAccommodationIdEquals(accommodationId) // Find the Accommodation entity
             );
 

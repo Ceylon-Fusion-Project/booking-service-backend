@@ -16,8 +16,6 @@ public interface BookingRepo extends JpaRepository<Booking, Long>, JpaSpecificat
 
     List<Booking> findAllByBookingIdEquals(Long bookingId);
 
-    List<Booking> findByUserId(Long userId);
-
     List<Booking> findByStatusType(StatusType statusType);
 
     List<Booking> findByCheckInDate(LocalDateTime checkInDate);
@@ -25,4 +23,7 @@ public interface BookingRepo extends JpaRepository<Booking, Long>, JpaSpecificat
     List<Booking> findByPackages_PackageId(Long packageId);
 
     List<Booking> findByCheckInDateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    List<Booking> findByCustomer(Long customer);
+
 }

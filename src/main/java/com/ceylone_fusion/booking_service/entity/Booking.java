@@ -22,8 +22,8 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bookingId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "customer", nullable = false)
+    private Long customer;
 
     @Enumerated(EnumType.STRING)
     @Column(name="status", nullable = false)
@@ -51,8 +51,8 @@ public class Booking {
     private Package packages;
 
 
-    public Booking(Long userId, StatusType statusType, LocalDateTime checkInDate, LocalDateTime checkOutDate, Double totalCost, Package packages) {
-        this.userId = userId;
+    public Booking(Long customer, StatusType statusType, LocalDateTime checkInDate, LocalDateTime checkOutDate, Double totalCost, Package packages) {
+        this.customer = customer;
         this.statusType = statusType;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;

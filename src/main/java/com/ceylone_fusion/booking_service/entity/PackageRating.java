@@ -9,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ratings")
+@Table(name = "package_ratings")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -20,14 +20,14 @@ public class PackageRating {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long ratingId;
 
-    @Column(name = "user_name", nullable = false)
-    private String userName;
+    @Column(name = "customer", nullable = false)
+    private Long customer;
 
-    @Column(name = "rating", nullable = false)
-    private Double rating;
+    @Column(name = "package_rating", nullable = false)
+    private Double packageRating;
 
-    @Column(name = "review")
-    private String review;
+    @Column(name = "package_review")
+    private String packageReview;
 
     @CreationTimestamp
     @Column(name = "rated_at", nullable = false, updatable = false)
@@ -37,4 +37,10 @@ public class PackageRating {
     @JoinColumn(name = "package_id", referencedColumnName = "package_id", nullable = false)
     private Package packages;
 
+    public PackageRating(Long customer, Double packageRating, String packageReview, Package packages) {
+        this.customer = customer;
+        this.packageRating = packageRating;
+        this.packageReview = packageReview;
+        this.packages = packages;
+    }
 }
