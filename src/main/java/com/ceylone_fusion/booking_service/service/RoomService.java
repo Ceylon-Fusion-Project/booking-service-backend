@@ -6,6 +6,7 @@ import com.ceylone_fusion.booking_service.dto.request.RoomSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.RoomUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.RoomGetResponseDTO;
 import com.ceylone_fusion.booking_service.entity.enums.RoomType;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 
@@ -30,4 +31,6 @@ public interface RoomService {
     PaginatedRoomGetResponseDTO getRoomByFiltering(RoomType roomType, Double minPrice, Double maxPrice, boolean isAvailable, Pageable pageable);
 
     PaginatedRoomGetResponseDTO getAllRoomsPaginated(Pageable pageable);
+
+    PaginatedRoomGetResponseDTO getRoomsByAccommodationIdPaginated(Long accommodationId, Pageable pageable);
 }

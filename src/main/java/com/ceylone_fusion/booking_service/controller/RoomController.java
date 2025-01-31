@@ -163,6 +163,28 @@ public class RoomController {
         }
     }
 
+    @GetMapping(path = "/get-rooms-by-accommodation-id-paginated")
+    public ResponseEntity<StandardResponse> getAllRooms(
+            @RequestParam(value = "accommodationId") Long accommodationId,
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedRoomGetResponseDTO response = roomService.getRoomsByAccommodationIdPaginated(accommodationId, pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Rooms Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
     @PatchMapping(
             path = "/update-room-details",
             params = "id"
