@@ -29,7 +29,6 @@ public class AccommodationController {
     public ResponseEntity<StandardResponse> saveAccommodation(@RequestBody AccommodationSaveRequestDTO accommodationSaveRequestDTO) {
         try {
             AccommodationDTO response = accommodationService.saveAccommodation(accommodationSaveRequestDTO);
-
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(201, "Accommodation Saved Successfully", response.getAccommodationName()),
                     HttpStatus.CREATED
@@ -41,7 +40,6 @@ public class AccommodationController {
             );
         }
     }
-
 
     @GetMapping(path = "/get-all-accommodations")
     public ResponseEntity<StandardResponse> getAllAccommodations() {
@@ -67,9 +65,7 @@ public class AccommodationController {
         try {
             // Pagination Specification
             PageRequest pageRequest = PageRequest.of(page, size);
-
             PaginatedAccommodationGetResponseDTO response = accommodationService.getAllAccommodationsPaginated(pageRequest);
-
             return new ResponseEntity<>(
                     new StandardResponse(200, "Accommodations Found", response),
                     HttpStatus.OK
@@ -81,8 +77,6 @@ public class AccommodationController {
             );
         }
     }
-
-
 
     @GetMapping(
             path = "/get-all-accommodations-by-available",
@@ -119,10 +113,8 @@ public class AccommodationController {
                 default:
                     sortSpec = Sort.by("accommodationName").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
-
             PaginatedAccommodationGetResponseDTO response = accommodationService.getAllAccommodationsSorted(isAvailable, pageRequest);
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "All Accommodations", response),
@@ -135,7 +127,6 @@ public class AccommodationController {
             );
         }
     }
-
 
     @GetMapping(
             path = "/get-accommodation-details-by-id",
@@ -156,7 +147,6 @@ public class AccommodationController {
         }
     }
 
-
     @GetMapping(
             path = "/get-accommodation-details-by-code",
             params = "code"
@@ -175,7 +165,6 @@ public class AccommodationController {
             );
         }
     }
-
 
     @PatchMapping(
             path = "/update-accommodation-details",
@@ -218,7 +207,6 @@ public class AccommodationController {
         }
     }
 
-
     @GetMapping(path = "/get-accommodation-by-filtering")
     public ResponseEntity<StandardResponse> getAccommodationByFiltering(
             @RequestParam(required = false) String accommodationName,
@@ -254,7 +242,6 @@ public class AccommodationController {
                 default:
                     sortSpec = Sort.by("accommodationName").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
             PaginatedAccommodationGetResponseDTO response = accommodationService.getAccommodationByFiltering(accommodationName, accommodationType, location, isAvailable, pageRequest);

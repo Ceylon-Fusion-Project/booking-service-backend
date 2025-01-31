@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 @EnableJpaRepositories
 public interface AccommodationRepo extends JpaRepository<Accommodation, Long>, JpaSpecificationExecutor<Accommodation> {
+
     boolean existsByAccommodationCodeEqualsIgnoreCase(String accommodationCode);
 
     List<Accommodation> findAllByAccommodationCodeEquals(String accommodationCode);
@@ -26,4 +27,5 @@ public interface AccommodationRepo extends JpaRepository<Accommodation, Long>, J
     Page<Accommodation> findAllByIsAvailableEquals(boolean isAvailable, Pageable pageable);
 
     Long countAccommodationByIsAvailableEquals(boolean isAvailable);
+
 }

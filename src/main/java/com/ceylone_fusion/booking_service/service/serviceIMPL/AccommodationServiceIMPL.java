@@ -46,7 +46,6 @@ public class AccommodationServiceIMPL implements AccommodationService {
         }
     }
 
-
     @Override
     public List<AccommodationGetResponseDTO> getAllAccommodations() {
         List<Accommodation> getAllAccommodations = accommodationRepo.findAll();
@@ -58,18 +57,15 @@ public class AccommodationServiceIMPL implements AccommodationService {
         }
     }
 
-
     @Override
     public PaginatedAccommodationGetResponseDTO getAllAccommodationsPaginated(Pageable pageable) {
         // Fetch paginated accommodations
         Page<Accommodation> accommodationsPage = accommodationRepo.findAll(pageable);
-
         if (accommodationsPage.hasContent()) {
             // Convert Page<Accommodation> to List<AccommodationGetResponseDTO>
             List<AccommodationGetResponseDTO> accommodationGetResponseDTOS = accommodationsPage.getContent().stream()
                     .map(accommodation -> modelMapper.map(accommodation, AccommodationGetResponseDTO.class))
                     .collect(Collectors.toList());
-
             // Return paginated response
             return new PaginatedAccommodationGetResponseDTO(
                     accommodationGetResponseDTOS,
@@ -80,7 +76,6 @@ public class AccommodationServiceIMPL implements AccommodationService {
         }
     }
 
-
     @Override
     public PaginatedAccommodationGetResponseDTO getAllAccommodationsSorted(boolean isAvailable, Pageable pageable) {
         // Get all accommodations with available status
@@ -88,11 +83,8 @@ public class AccommodationServiceIMPL implements AccommodationService {
         if (!accommodations.isEmpty()) {
             // Map Accommodation Entity List to Accommodation DTO List
             List<AccommodationDTO> accommodationDTOS = accommodationMapper.AccommodationEntityListToAccommodationDTOList(accommodations);
-
             // Map Accommodation DTO List to AccommodationGetResponseDTO List
             List<AccommodationGetResponseDTO> accommodationGetResponseDTOS = accommodationMapper.accommodationDTOListToAccommodationGetResponseDTOList(accommodationDTOS);
-
-
             // Return PaginatedAccommodationGetResponseDTO
             return new PaginatedAccommodationGetResponseDTO(
                     accommodationGetResponseDTOS,
@@ -102,8 +94,6 @@ public class AccommodationServiceIMPL implements AccommodationService {
             throw new RuntimeException("No Accommodation Found");
         }
     }
-
-
 
     @Override
     public List<AccommodationGetResponseDTO> getAccommodationById(Long accommodationId) {
@@ -136,48 +126,39 @@ public class AccommodationServiceIMPL implements AccommodationService {
         if (accommodationRepo.existsById(accommodationId)) {
             // Get Accommodation by Accommodation ID and Map Accommodation Entity to Accommodation DTO
             Accommodation existingAccommodation = accommodationRepo.getReferenceById(accommodationId);
-
             // Update Accommodation name
             if (accommodationUpdateRequestDTO.getAccommodationName() != null) {
                 existingAccommodation.setAccommodationName(accommodationUpdateRequestDTO.getAccommodationName());
             }
-
             // Update Accommodation Type
             if (accommodationUpdateRequestDTO.getAccommodationType() != null) {
                 existingAccommodation.setAccommodationType(accommodationUpdateRequestDTO.getAccommodationType());
             }
-
             // Update Accommodation Description
             if (accommodationUpdateRequestDTO.getAccommodationDescription() != null) {
                 existingAccommodation.setAccommodationDescription(accommodationUpdateRequestDTO.getAccommodationDescription());
             }
-
             // Update Accommodation Location
             if (accommodationUpdateRequestDTO.getLocation() != null) {
                 existingAccommodation.setLocation(accommodationUpdateRequestDTO.getLocation());
             }
-
             // Update Accommodation Is Available
             if (accommodationUpdateRequestDTO.isAvailable()) {
                 existingAccommodation.setAvailable(true);
             }
             // Save the updated Accommodation
             accommodationRepo.save(existingAccommodation);
-
             return modelMapper.map(existingAccommodation, AccommodationDTO.class);
         } else {
             throw new RuntimeException("Accommodation Not Found");
         }
     }
 
-
-
     @Override
     public String deleteAccommodationById(Long accommodationId) {
         // Get Accommodation by Accommodation ID
         if (accommodationRepo.existsById(accommodationId)) {
             String response = accommodationRepo.getReferenceById(accommodationId).getAccommodationName() + " Deleted!";
-
             //delete accommodation
             accommodationRepo.deleteById(accommodationId);
             return response;
@@ -185,7 +166,6 @@ public class AccommodationServiceIMPL implements AccommodationService {
             throw new RuntimeException("Accommodation Not Found");
         }
     }
-
 
     @Override
     public PaginatedAccommodationGetResponseDTO getAccommodationByFiltering(
@@ -198,17 +178,14 @@ public class AccommodationServiceIMPL implements AccommodationService {
                 where(AccommodationSpecifications.isAvailable(isAvailable))
                 .and(AccommodationSpecifications.hasName(accommodationName))
                 .and(AccommodationSpecifications.hasType(accommodationType));
-
         // Get all accommodations with available
         Page<Accommodation> accommodations = accommodationRepo.findAll(specification, pageable);
         if (!accommodations.isEmpty()) {
             // Map Accommodation Entity List to Accommodation DTO List
             List<AccommodationDTO> accommodationDTOS = accommodationMapper.AccommodationEntityListToAccommodationDTOList(accommodations);
-
             // Map Accommodation DTO List to AccommodationGetResponseDTO List
             List<AccommodationGetResponseDTO> accommodationGetResponseDTOS = accommodationMapper
                     .accommodationDTOListToAccommodationGetResponseDTOList(accommodationDTOS);
-
             return new PaginatedAccommodationGetResponseDTO(
                     accommodationGetResponseDTOS,
                     accommodationRepo.count(specification)
@@ -217,9 +194,6 @@ public class AccommodationServiceIMPL implements AccommodationService {
             throw new RuntimeException("No Accommodation Found");
         }
     }
-
-
-
 
 }
 
