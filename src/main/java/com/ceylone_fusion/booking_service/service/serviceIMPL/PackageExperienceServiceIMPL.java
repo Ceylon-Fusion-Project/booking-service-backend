@@ -43,7 +43,7 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
             PackageExperience packageExperience = new PackageExperience(
                     null, // ID is auto-generated
                     packageExperienceSaveRequestDTO.getQuantity(),
-                    packageRepo.findPackageByPackageId(packageId), // Find the Package entity
+                    packageRepo.findPackagesByPackageIdEquals(packageId), // Find the Package entity
                     experienceCenterRepo.findExperienceByExperienceIdEquals(experienceId) // Find the Experience Center entity
             );
 

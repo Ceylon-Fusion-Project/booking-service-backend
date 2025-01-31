@@ -35,11 +35,11 @@ public class BookingServiceIMPL implements BookingService {
 
     @Override
     public BookingDTO saveBooking(BookingSaveRequestDTO bookingSaveRequestDTO) {
-        Long userId = bookingSaveRequestDTO.getUserId();
+        Long customer = bookingSaveRequestDTO.getCustomer();
         Long packageId = bookingSaveRequestDTO.getPackageId();
-        if (bookingRepo.existsById(userId)) {
+        if (bookingRepo.existsById(customer)) {
             // Retrieve the package details
-            Package packageDetails = packageRepo.findPackageByPackageId(packageId);
+            Package packageDetails = packageRepo.findPackagesByPackageIdEquals(packageId);
             if (!(packageDetails == null)) {
                 // Calculate total cost based on the booking duration and package price
                 LocalDateTime checkInDate = bookingSaveRequestDTO.getCheckInDate();
@@ -51,7 +51,7 @@ public class BookingServiceIMPL implements BookingService {
 
                     // Create and save the new booking
                     Booking newBooking = new Booking(
-                            userId,
+                            customer,
                             bookingSaveRequestDTO.getStatusType(),
                             checkInDate,
                             checkOutDate,
@@ -70,7 +70,7 @@ public class BookingServiceIMPL implements BookingService {
                 throw new RuntimeException("Package not found");
             }
         } else {
-            throw new RuntimeException("User Not Found");
+            throw new RuntimeException("Customer Not Found");
         }
     }
 
@@ -98,7 +98,7 @@ public class BookingServiceIMPL implements BookingService {
 
     @Override
     public List<BookingGetResponseDTO> getAllBookingDetails(
-            Long userId,
+            Long customer,
             StatusType statusType,
             LocalDate checkInDate,
             Long packageId
@@ -106,8 +106,8 @@ public class BookingServiceIMPL implements BookingService {
         List<Booking> bookings;
 
         // Apply filters based on input parameters
-        if (userId != null) {
-            bookings = bookingRepo.findByUserId(userId);
+        if (customer != null) {
+            bookings = bookingRepo.findByCustomer(customer);
         } else if (statusType != null) {
             bookings = bookingRepo.findByStatusType(statusType);
         } else if (checkInDate != null) {

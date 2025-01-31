@@ -15,6 +15,7 @@ public class PackageGetResponseDTO {
     private String description;
     private Double price;
     private boolean isPredefined;
+    private Double packageRatingValue;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 

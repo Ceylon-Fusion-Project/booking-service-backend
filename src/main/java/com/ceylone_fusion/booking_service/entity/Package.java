@@ -36,6 +36,9 @@ public class Package {
     @Column(name = "is_predefined")
     private boolean isPredefined;
 
+    @Column(name = "package_avg_rating")
+    private Double packageRatingValue = 0.0;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDate createdAt;
@@ -54,6 +57,6 @@ public class Package {
     private Booking booking;
 
     @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PackageRating> ratings;
+    private List<PackageRating> packageRatings;
 
 }
