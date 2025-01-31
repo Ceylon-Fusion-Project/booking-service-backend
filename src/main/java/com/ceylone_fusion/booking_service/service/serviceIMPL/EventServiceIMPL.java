@@ -51,14 +51,12 @@ public class EventServiceIMPL implements EventService {
                     eventSaveRequestDTO.getEndTime(),
                     experienceCenterRepo.findExperienceCenterByExperienceIdEquals(experienceId)
             );
-
             eventRepo.save(newEvent);
             return modelMapper.map(newEvent, EventDTO.class);
         } else {
             throw new RuntimeException("Experience Center Not Found");
         }
     }
-
 
     @Override
     public List<EventGetResponseDTO> getAllEvents() {
@@ -67,6 +65,25 @@ public class EventServiceIMPL implements EventService {
             return modelMapper.map(getAllEvents, new TypeToken<List<EventGetResponseDTO>>(){}.getType());
         }
         else{
+            throw new RuntimeException("No Events Found");
+        }
+    }
+
+    @Override
+    public PaginatedEventGetResponseDTO getAllEventsPaginated(Pageable pageable) {
+        // Fetch paginated event
+        Page<Event> eventsPage = eventRepo.findAll(pageable);
+        if (eventsPage.hasContent()) {
+            // Convert Page<Event> to List<EventGetResponseDTO>
+            List<EventGetResponseDTO> eventGetResponseDTOS = eventsPage.getContent().stream()
+                    .map(event -> modelMapper.map(event, EventGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedEventGetResponseDTO(
+                    eventGetResponseDTOS,
+                    eventsPage.getTotalElements()
+            );
+        } else {
             throw new RuntimeException("No Events Found");
         }
     }
@@ -89,11 +106,8 @@ public class EventServiceIMPL implements EventService {
         if (!events.isEmpty()) {
             // Map Event Entity List to Event DTO List
             List<EventDTO> eventDTOS = eventMapper.EventEntityListToEventDTOList(events);
-
             // Map Event DTO List to EventGetResponseDTO List
             List<EventGetResponseDTO> eventGetResponseDTOS = eventMapper.eventDTOListToEventGetResponseDTOList(eventDTOS);
-
-
             // Return PaginatedEventGetResponseDTO
             return new PaginatedEventGetResponseDTO(
                     eventGetResponseDTOS,
@@ -103,7 +117,6 @@ public class EventServiceIMPL implements EventService {
             throw new RuntimeException("No Event Found");
         }
     }
-
 
     @Override
     public List<EventGetResponseDTO> getEventDetailsByExperienceId(Long experienceId) {
@@ -120,7 +133,6 @@ public class EventServiceIMPL implements EventService {
         }
     }
 
-
     @Override
     public EventDTO updateEventDetails(
             EventUpdateRequestDTO eventUpdateRequestDTO,
@@ -130,40 +142,32 @@ public class EventServiceIMPL implements EventService {
         if (eventRepo.existsById(eventId)) {
             // Get Event by Event ID and Map Event Entity to Event DTO
             Event existingEvent = eventRepo.getReferenceById(eventId);
-
             // Update Event Image URLs
             if (eventUpdateRequestDTO.getEventImageURLs() != null) {
                 existingEvent.setEventImageURLs(eventUpdateRequestDTO.getEventImageURLs());
             }
-
             // Update Event Description
             if (eventUpdateRequestDTO.getEventDescription() != null) {
                 existingEvent.setEventDescription(eventUpdateRequestDTO.getEventDescription());
             }
-
             // Update Price Per Event
             if (eventUpdateRequestDTO.getPricePerEvent() != null) {
                 existingEvent.setPricePerEvent(eventUpdateRequestDTO.getPricePerEvent());
             }
-
             // Update Is Available
             if (eventUpdateRequestDTO.isAvailable()) {
                 existingEvent.setAvailable(true);
             }
-
             // Update Event Start Time
             if (eventUpdateRequestDTO.getStartTime() != null) {
                 existingEvent.setStartTime(eventUpdateRequestDTO.getStartTime());
             }
-
             // Update Event End Time
             if (eventUpdateRequestDTO.getEndTime() != null) {
                 existingEvent.setEndTime(eventUpdateRequestDTO.getEndTime());
             }
-
             // Save the updated Event
             eventRepo.save(existingEvent);
-
             return modelMapper.map(existingEvent, EventDTO.class);
         } else {
             throw new RuntimeException("Event Not Found");
@@ -175,7 +179,6 @@ public class EventServiceIMPL implements EventService {
         // Get Event by Event ID
         if (eventRepo.existsById(eventId)) {
             String response = eventRepo.getReferenceById(eventId).getEventName() + " Deleted!";
-
             //delete event
             eventRepo.deleteById(eventId);
             return response;
@@ -183,7 +186,6 @@ public class EventServiceIMPL implements EventService {
             throw new RuntimeException("Event Not Found");
         }
     }
-
 
     @Override
     public PaginatedEventGetResponseDTO getEventByFiltering(
@@ -200,17 +202,14 @@ public class EventServiceIMPL implements EventService {
                 .and(EventSpecifications.hasName(eventName))
                 .and(EventSpecifications.hasPriceRange(minPrice, maxPrice))
                 .and(EventSpecifications.hasTimeRange(startTime, endTime));
-
         // Get all events with available
         Page<Event> events = eventRepo.findAll(specification, pageable);
         if (!events.isEmpty()) {
             // Map Event Entity List to Event DTO List
             List<EventDTO> eventDTOS = eventMapper.EventEntityListToEventDTOList(events);
-
             // Map Event DTO List to EventGetResponseDTO List
             List<EventGetResponseDTO> eventGetResponseDTOS = eventMapper
                     .eventDTOListToEventGetResponseDTOList(eventDTOS);
-
             return new PaginatedEventGetResponseDTO(
                     eventGetResponseDTOS,
                     eventRepo.count(specification)
@@ -219,7 +218,5 @@ public class EventServiceIMPL implements EventService {
             throw new RuntimeException("No Event Found");
         }
     }
-
-
 
 }
