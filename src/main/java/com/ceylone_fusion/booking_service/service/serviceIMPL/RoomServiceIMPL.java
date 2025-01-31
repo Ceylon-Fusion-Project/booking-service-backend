@@ -107,7 +107,6 @@ public class RoomServiceIMPL implements RoomService {
         }
     }
 
-
     @Override
     public List<RoomGetResponseDTO> getAllRoomDetailsById(Long roomId) {
         List<Room> rooms = roomRepo.findAllRoomsByRoomIdEquals(roomId);
@@ -132,6 +131,25 @@ public class RoomServiceIMPL implements RoomService {
         }
         else {
             throw new RuntimeException("No Accommodation Found");
+        }
+    }
+
+    @Override
+    public PaginatedRoomGetResponseDTO getRoomsByAccommodationIdPaginated(Long accommodationId, Pageable pageable) {
+        // Fetch paginated rooms
+        Page<Room> roomsPage = roomRepo.findByAccommodationId(accommodationId, pageable);
+        if (roomsPage.hasContent()) {
+            // Convert Page<Room> to List<RoomGetResponseDTO>
+            List<RoomGetResponseDTO> roomGetResponseDTOS = roomsPage.getContent().stream()
+                    .map(room -> modelMapper.map(room, RoomGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedRoomGetResponseDTO(
+                    roomGetResponseDTOS,
+                    roomsPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Rooms Found");
         }
     }
 

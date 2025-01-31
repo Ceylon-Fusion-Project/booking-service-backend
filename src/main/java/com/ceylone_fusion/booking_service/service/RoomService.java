@@ -30,4 +30,7 @@ public interface RoomService {
     PaginatedRoomGetResponseDTO getRoomByFiltering(RoomType roomType, Double minPrice, Double maxPrice, boolean isAvailable, Pageable pageable);
 
     PaginatedRoomGetResponseDTO getAllRoomsPaginated(Pageable pageable);
+
+    PaginatedRoomGetResponseDTO getRoomsByAccommodationIdPaginated(Long accommodationId, Pageable pageable);
+
 }

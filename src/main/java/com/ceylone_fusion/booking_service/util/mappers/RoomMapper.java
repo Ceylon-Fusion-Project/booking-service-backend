@@ -10,7 +10,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
+
     List<RoomDTO> RoomEntityListToRoomDTOList(Page<Room> rooms);
 
     List<RoomGetResponseDTO> roomDTOListToRoomGetResponseDTOList(List<RoomDTO> roomDTOS);
+
 }

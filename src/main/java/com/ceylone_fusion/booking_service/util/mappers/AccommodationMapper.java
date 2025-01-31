@@ -14,4 +14,5 @@ public interface AccommodationMapper {
     List<AccommodationDTO> AccommodationEntityListToAccommodationDTOList(Page<Accommodation> accommodations);
 
     List<AccommodationGetResponseDTO> accommodationDTOListToAccommodationGetResponseDTOList(List<AccommodationDTO> accommodationDTOS);
+
 }
