@@ -27,4 +27,7 @@ public interface EventService {
     PaginatedEventGetResponseDTO getEventByFiltering(String eventName, Double minPrice, Double maxPrice, LocalTime startTime, LocalTime endTime, boolean isAvailable, Pageable pageable);
 
     EventDTO updateEventDetails(EventUpdateRequestDTO eventUpdateRequestDTO, Long eventId);
+
+    PaginatedEventGetResponseDTO getAllEventsPaginated(Pageable pageable);
+
 }

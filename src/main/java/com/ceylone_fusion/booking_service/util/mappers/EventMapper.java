@@ -10,7 +10,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface EventMapper {
+
     List<EventDTO> EventEntityListToEventDTOList(Page<Event> events);
 
     List<EventGetResponseDTO> eventDTOListToEventGetResponseDTOList(List<EventDTO> eventDTOS);
+
 }

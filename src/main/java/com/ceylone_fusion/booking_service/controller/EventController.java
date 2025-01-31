@@ -42,7 +42,6 @@ public class EventController {
         }
     }
 
-
     @GetMapping(path = "/get-all-events")
     public ResponseEntity<StandardResponse> getAllEvents() {
         try {
@@ -57,9 +56,28 @@ public class EventController {
                     HttpStatus.NOT_FOUND
             );
         }
-
     }
 
+    @GetMapping(path = "/get-all-events-paginated")
+    public ResponseEntity<StandardResponse> getAllEvents(
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedEventGetResponseDTO response = eventService.getAllEventsPaginated(pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Events Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @GetMapping(
             path = "/get-all-events-by-available",
@@ -96,10 +114,8 @@ public class EventController {
                 default:
                     sortSpec = Sort.by("eventName").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
-
             PaginatedEventGetResponseDTO response = eventService.getAllEventsSorted(isAvailable, pageRequest);
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "All Events", response),
@@ -132,7 +148,6 @@ public class EventController {
         }
     }
 
-
     @GetMapping(path = "/get-events-by-experience-id")
     public ResponseEntity<StandardResponse> getEventsByExperienceId(@RequestParam(value = "id") Long experienceId) {
         try {
@@ -148,7 +163,6 @@ public class EventController {
             );
         }
     }
-
 
     @PatchMapping(
             path = "/update-event-details",
@@ -191,7 +205,6 @@ public class EventController {
         }
     }
 
-
     @GetMapping(path = "/get-event-by-filtering")
     public ResponseEntity<StandardResponse> getEventByFiltering(
             @RequestParam(required = false) String eventName,
@@ -208,7 +221,6 @@ public class EventController {
             // Parse startTime and endTime if provided
             LocalTime parsedStartTime = startTime != null ? LocalTime.parse(startTime) : null;
             LocalTime parsedEndTime = endTime != null ? LocalTime.parse(endTime) : null;
-
             // Sort Specification
             Sort sortSpec;
             switch (sort) {
@@ -233,7 +245,6 @@ public class EventController {
                 default:
                     sortSpec = Sort.by("eventName").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
             PaginatedEventGetResponseDTO response = eventService.getEventByFiltering(eventName, minPrice, maxPrice, parsedStartTime, parsedEndTime, isAvailable, pageRequest);

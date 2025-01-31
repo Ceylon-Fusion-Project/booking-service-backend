@@ -58,4 +58,5 @@ public class Event {
         this.endTime = endTime;
         this.experienceCenter = experienceCenter;
     }
+
 }

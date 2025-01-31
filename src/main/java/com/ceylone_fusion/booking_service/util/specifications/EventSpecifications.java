@@ -43,7 +43,6 @@ public class EventSpecifications {
                         predicate,
                         criteriaBuilder.greaterThanOrEqualTo(root.get("pricePerEvent"), minPrice)
                 );
-
             }
             if(maxPrice != null) {
                 predicate = criteriaBuilder.and(
@@ -77,4 +76,5 @@ public class EventSpecifications {
             return predicate;
         };
     }
+
 }
