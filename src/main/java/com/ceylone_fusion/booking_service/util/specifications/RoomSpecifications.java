@@ -43,7 +43,6 @@ public class RoomSpecifications {
                         predicate,
                         criteriaBuilder.greaterThanOrEqualTo(root.get("pricePerNight"), minPrice)
                 );
-
             }
             if(maxPrice != null) {
                 predicate = criteriaBuilder.and(
@@ -55,4 +54,5 @@ public class RoomSpecifications {
             return predicate;
         };
     }
+
 }
