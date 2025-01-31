@@ -29,7 +29,6 @@ public class RoomController {
     public ResponseEntity<StandardResponse> saveRoom(@RequestBody RoomSaveRequestDTO roomSaveRequestDTO) {
         try {
             RoomDTO response = roomService.saveRoom(roomSaveRequestDTO);
-
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(201, "Room Saved Successfully", response.getRoomNumber()),
                     HttpStatus.CREATED
@@ -41,7 +40,6 @@ public class RoomController {
             );
         }
     }
-
 
     @GetMapping(path = "/get-all-rooms")
     public ResponseEntity<StandardResponse> getAllRooms() {
@@ -57,9 +55,28 @@ public class RoomController {
                     HttpStatus.NOT_FOUND
             );
         }
-
     }
 
+    @GetMapping(path = "/get-all-rooms-paginated")
+    public ResponseEntity<StandardResponse> getAllRooms(
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedRoomGetResponseDTO response = roomService.getAllRoomsPaginated(pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Room Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @GetMapping(
             path = "/get-all-rooms-by-available",
@@ -96,10 +113,8 @@ public class RoomController {
                 default:
                     sortSpec = Sort.by("roomNumber").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
-
             PaginatedRoomGetResponseDTO response = roomService.getAllRoomsSorted(isAvailable, pageRequest);
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "All Rooms", response),
@@ -112,7 +127,6 @@ public class RoomController {
             );
         }
     }
-
 
     @GetMapping(
             path = "/get-room-details-by-id",
@@ -133,9 +147,6 @@ public class RoomController {
         }
     }
 
-
-
-
     @GetMapping(path = "/get-rooms-by-accommodation-id")
     public ResponseEntity<StandardResponse> getRoomsByAccommodationId(@RequestParam(value = "id") Long accommodationId) {
         try {
@@ -151,7 +162,6 @@ public class RoomController {
             );
         }
     }
-
 
     @PatchMapping(
             path = "/update-room-details",
@@ -175,7 +185,6 @@ public class RoomController {
         }
     }
 
-
     @DeleteMapping(
             path = "/delete-room-by-id",
             params = "id"
@@ -194,7 +203,6 @@ public class RoomController {
             );
         }
     }
-
 
     @GetMapping(path = "/get-room-by-filtering")
     public ResponseEntity<StandardResponse> getRoomByFiltering(
@@ -225,7 +233,6 @@ public class RoomController {
                 default:
                     sortSpec = Sort.by("roomType").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
             PaginatedRoomGetResponseDTO response = roomService.getRoomByFiltering(roomType, minPrice, maxPrice, isAvailable, pageRequest);
@@ -240,6 +247,5 @@ public class RoomController {
             );
         }
     }
-
 
 }

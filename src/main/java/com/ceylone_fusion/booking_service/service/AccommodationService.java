@@ -6,6 +6,7 @@ import com.ceylone_fusion.booking_service.dto.request.AccommodationSaveRequestDT
 import com.ceylone_fusion.booking_service.dto.request.AccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.entity.enums.AccommodationType;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -28,4 +29,5 @@ public interface AccommodationService {
     PaginatedAccommodationGetResponseDTO getAccommodationByFiltering(String accommodationName, AccommodationType accommodationType, String location, boolean isAvailable, Pageable pageable);
 
     PaginatedAccommodationGetResponseDTO getAllAccommodationsPaginated(Pageable pageable);
+
 }

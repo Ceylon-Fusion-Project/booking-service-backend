@@ -16,7 +16,7 @@ import java.util.List;
 public class Accommodation {
 
     @Id
-    @Column(name = "accomodation_id")
+    @Column(name = "accommodation_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accommodationId;
 
