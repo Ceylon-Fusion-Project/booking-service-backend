@@ -10,7 +10,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ExperienceCenterMapper {
+
     List<ExperienceCenterDTO> ExperienceCenterEntityListToExperienceCenterDTOList(Page<ExperienceCenter> experienceCenters);
 
     List<ExperienceCenterGetResponseDTO> experienceCenterDTOListToExperienceCenterGetResponseDTOList(List<ExperienceCenterDTO> experienceCenterDTOS);
+
 }

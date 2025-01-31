@@ -28,7 +28,6 @@ public class ExperienceCenterController {
     public ResponseEntity<StandardResponse> saveExperienceCenter(@RequestBody ExperienceCenterSaveRequestDTO experienceCenterSaveRequestDTO) {
         try {
             ExperienceCenterDTO response = experienceCenterService.saveExperienceCenter(experienceCenterSaveRequestDTO);
-
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(201, "Experience Center Saved Successfully", response.getExperienceName()),
                     HttpStatus.CREATED
@@ -40,7 +39,6 @@ public class ExperienceCenterController {
             );
         }
     }
-
 
     @GetMapping(path = "/get-all-experience-centers")
     public ResponseEntity<StandardResponse> getAllExperienceCenters() {
@@ -58,6 +56,26 @@ public class ExperienceCenterController {
         }
     }
 
+    @GetMapping(path = "/get-all-experience-centers-paginated")
+    public ResponseEntity<StandardResponse> getAllAccommodations(
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedExperienceCenterGetResponseDTO response = experienceCenterService.getAllExperienceCentersPaginated(pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Experience Center Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @GetMapping(
             path = "/get-all-experience-center-by-available",
@@ -88,10 +106,8 @@ public class ExperienceCenterController {
                 default:
                     sortSpec = Sort.by("experienceName").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
-
             PaginatedExperienceCenterGetResponseDTO response = experienceCenterService.getAllExperienceCentersSorted(isAvailable, pageRequest);
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "All Experience Centers", response),
@@ -144,7 +160,6 @@ public class ExperienceCenterController {
         }
     }
 
-
     @PatchMapping(
             path = "/update-experience-center-details",
             params = "id"
@@ -167,7 +182,6 @@ public class ExperienceCenterController {
         }
 
     }
-
 
     @DeleteMapping(
             path = "/delete-experience-center-by-id",
@@ -216,7 +230,6 @@ public class ExperienceCenterController {
                 default:
                     sortSpec = Sort.by("experienceName").ascending();
             }
-
             // Page Request Specification
             PageRequest pageRequest = PageRequest.of(page, size, sortSpec);
             PaginatedExperienceCenterGetResponseDTO response = experienceCenterService.getExperienceCenterByFiltering(experienceName, location, isAvailable, pageRequest);
