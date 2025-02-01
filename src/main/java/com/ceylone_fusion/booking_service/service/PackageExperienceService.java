@@ -26,4 +26,5 @@ public interface PackageExperienceService {
     PaginatedPackageExperienceGetResponseDTO getAllPackageExperiencesPaginated(Pageable pageable);
 
     PaginatedPackageExperienceGetResponseDTO getAllPackageExperienceDetailsPaginated(Long packageId, Long experienceId, Pageable pageable);
+
 }
