@@ -1,9 +1,13 @@
 package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.PackageExperienceDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageExperienceGetResponseDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageExperienceGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageExperienceSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageExperienceUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageExperienceGetResponseDTO;
+import com.ceylone_fusion.booking_service.dto.response.PackageExperienceGetResponseDTO;
+import com.ceylone_fusion.booking_service.entity.PackageExperience;
 import com.ceylone_fusion.booking_service.entity.PackageExperience;
 import com.ceylone_fusion.booking_service.repo.ExperienceCenterRepo;
 import com.ceylone_fusion.booking_service.repo.PackageExperienceRepo;
@@ -12,6 +16,8 @@ import com.ceylone_fusion.booking_service.service.PackageExperienceService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,6 +75,25 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
     }
 
     @Override
+    public PaginatedPackageExperienceGetResponseDTO getAllPackageExperiencesPaginated(Pageable pageable) {
+        // Fetch paginated package experience
+        Page<PackageExperience> packageExperiencesPage = packageExperienceRepo.findAll(pageable);
+        if (packageExperiencesPage.hasContent()) {
+            // Convert Page<PackageExperience> to List<PackageExperienceGetResponseDTO>
+            List<PackageExperienceGetResponseDTO> packageExperienceGetResponseDTOS = packageExperiencesPage.getContent().stream()
+                    .map(packageExperience -> modelMapper.map(packageExperience, PackageExperienceGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedPackageExperienceGetResponseDTO(
+                    packageExperienceGetResponseDTOS,
+                    packageExperiencesPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Package Experiences Found");
+        }
+    }
+
+    @Override
     public List<PackageExperienceGetResponseDTO> getPackageExperienceById(Long packageExperienceId) {
         List<PackageExperience> packageExperiences = packageExperienceRepo.findAllByPackageExperienceIdEquals(packageExperienceId);
         if(!packageExperiences.isEmpty()) {
@@ -94,7 +119,6 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
         } else {
             throw new RuntimeException("Experience Package Not Found");
         }
-
         // Map entities to DTOs
         return packageExperiences.stream()
                 .map(packageExperience -> new PackageExperienceGetResponseDTO(
@@ -115,15 +139,12 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
         if (packageExperienceRepo.existsById(packageExperienceId)) {
             // Get Package Experience by Package Experience ID and Map Package Experience Entity to Package Experience DTO
             PackageExperience existingPackageExperience = packageExperienceRepo.getReferenceById(packageExperienceId);
-
             // Update Package Experience quantity
             if (packageExperienceUpdateRequestDTO.getQuantity() != 0) {
                 existingPackageExperience.setQuantity(packageExperienceUpdateRequestDTO.getQuantity());
             }
-
             // Save the updated Package Experience
             packageExperienceRepo.save(existingPackageExperience);
-
             return modelMapper.map(existingPackageExperience, PackageExperienceDTO.class);
         } else {
             throw new RuntimeException("Experience Package Not Found");
@@ -135,7 +156,6 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
         // Get Package Experience by Package Experience ID
         if (packageExperienceRepo.existsById(packageExperienceId)) {
             String response = packageExperienceRepo.getReferenceById(packageExperienceId).getPackageExperienceId() + " Deleted!";
-
             //delete experience
             packageExperienceRepo.deleteById(packageExperienceId);
             return response;
@@ -143,6 +163,5 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
             throw new RuntimeException("Experience Package Not Found");
         }
     }
-
 
 }
