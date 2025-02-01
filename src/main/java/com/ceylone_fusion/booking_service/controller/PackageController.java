@@ -1,12 +1,14 @@
 package com.ceylone_fusion.booking_service.controller;
 
 import com.ceylone_fusion.booking_service.dto.PackageDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.service.PackageService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,6 @@ public class PackageController {
     public ResponseEntity<StandardResponse> savePackage(@RequestBody PackageSaveRequestDTO packageSaveRequestDTO) {
         try {
             PackageDTO response = packageService.savePackage(packageSaveRequestDTO);
-
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(201, "Package Saved Successfully", response.getPackageId()),
                     HttpStatus.CREATED
@@ -37,7 +38,6 @@ public class PackageController {
             );
         }
     }
-
 
     @GetMapping(path = "/get-all-packages")
     public ResponseEntity<StandardResponse> getAllPackages() {
@@ -55,6 +55,26 @@ public class PackageController {
         }
     }
 
+    @GetMapping(path = "/get-all-packages-paginated")
+    public ResponseEntity<StandardResponse> getAllPackage(
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedPackageGetResponseDTO response = packageService.getAllPackagesPaginated(pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @GetMapping(
             path = "/get-package-details-by-id",

@@ -1,15 +1,21 @@
 package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.PackageDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
+import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
+import com.ceylone_fusion.booking_service.entity.Package;
 import com.ceylone_fusion.booking_service.entity.Package;
 import com.ceylone_fusion.booking_service.repo.PackageRepo;
 import com.ceylone_fusion.booking_service.service.PackageService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +58,25 @@ public class PackageServiceIMPL implements PackageService {
     }
 
     @Override
+    public PaginatedPackageGetResponseDTO getAllPackagesPaginated(Pageable pageable) {
+        // Fetch paginated package
+        Page<Package> packagesPage = packageRepo.findAll(pageable);
+        if (packagesPage.hasContent()) {
+            // Convert Page<Package> to List<PackageGetResponseDTO>
+            List<PackageGetResponseDTO> packageGetResponseDTOS = packagesPage.getContent().stream()
+                    .map(packages -> modelMapper.map(packages, PackageGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedPackageGetResponseDTO(
+                    packageGetResponseDTOS,
+                    packagesPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Package s Found");
+        }
+    }
+
+    @Override
     public List<PackageGetResponseDTO> getPackageById(Long packageId) {
         List<Package> packages = packageRepo.findAllByPackageIdEquals(packageId);
         if(!packages.isEmpty()) {
@@ -69,9 +94,7 @@ public class PackageServiceIMPL implements PackageService {
             Double minPrice,
             Double maxPrice
     ) {
-
         List<Package> packages;
-
         // Apply filters based on input parameters
         if (packageName != null && !packageName.isEmpty()) {
             packages = packageRepo.findByPackageName(packageName);
@@ -84,12 +107,10 @@ public class PackageServiceIMPL implements PackageService {
         } else {
             packages = packageRepo.findAll(); // Retrieve all packages if no filters are applied
         }
-
         // Handle empty or null results
         if (packages == null || packages.isEmpty()) {
             throw new RuntimeException("No packages found matching the criteria.");
         }
-
         // Map Package entities to DTOs
         return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>() {}.getType());
     }
@@ -100,30 +121,24 @@ public class PackageServiceIMPL implements PackageService {
         if (packageRepo.existsById(packageId)) {
             // Get Package by Package ID and Map Package Entity to Package DTO
             Package existingPackage = packageRepo.getReferenceById(packageId);
-
             // Update Package name
             if (packageUpdateRequestDTO.getPackageName() != null) {
                 existingPackage.setPackageName(packageUpdateRequestDTO.getPackageName());
             }
-
             // Update Package Description
             if (packageUpdateRequestDTO.getDescription() != null) {
                 existingPackage.setDescription(packageUpdateRequestDTO.getDescription());
             }
-
             // Update Package Price
             if (packageUpdateRequestDTO.getPricePerDay() != null) {
                 existingPackage.setPricePerDay(packageUpdateRequestDTO.getPricePerDay());
             }
-
             // Update Package Is Predefined
             if (packageUpdateRequestDTO.isPredefined()) {
                 existingPackage.setPredefined(true);
             }
-
             // Save the updated Package
             packageRepo.save(existingPackage);
-
             return modelMapper.map(existingPackage, PackageDTO.class);
         } else {
             throw new RuntimeException("Package Not Found");
@@ -135,7 +150,6 @@ public class PackageServiceIMPL implements PackageService {
         // Get Package by Package ID
         if (packageRepo.existsById(packageId)) {
             String response = packageRepo.getReferenceById(packageId).getPackageName() + " Deleted!";
-
             //delete package
             packageRepo.deleteById(packageId);
             return response;
