@@ -118,6 +118,29 @@ public class PackageAccommodationController {
         }
     }
 
+    @GetMapping(path = "/get-package-accommodation-details-paginated")
+    public ResponseEntity<StandardResponse> getAllPackageAccommodationDetails(
+            @RequestParam(value = "packageId", required = false) Long packageId,
+            @RequestParam(value = "accommodationId", required = false) Long accommodationId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        try {
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedPackageAccommodationGetResponseDTO response =
+                    packageAccommodationService.getAllPackageAccommodationDetailsPaginated(packageId, accommodationId, pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Accommodation Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
     @PatchMapping(
             path = "/update-package-accommodation-details",
             params = "id"

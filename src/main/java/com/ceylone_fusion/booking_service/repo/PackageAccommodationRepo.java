@@ -1,6 +1,8 @@
 package com.ceylone_fusion.booking_service.repo;
 
 import com.ceylone_fusion.booking_service.entity.PackageAccommodation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -19,4 +21,11 @@ public interface PackageAccommodationRepo extends JpaRepository<PackageAccommoda
     List<PackageAccommodation> findByAccommodation_AccommodationId(Long accommodationId);
 
     List<PackageAccommodation> findByPackages_PackageIdAndAccommodation_AccommodationId(Long packageId, Long accommodationId);
+
+    Page<PackageAccommodation> findByPackages_PackageIdAndAccommodation_AccommodationId(Long packageId, Long accommodationId, Pageable pageable);
+
+    Page<PackageAccommodation> findByPackages_PackageId(Long packageId, Pageable pageable);
+
+    Page<PackageAccommodation> findByAccommodation_AccommodationId(Long accommodationId, Pageable pageable);
+
 }

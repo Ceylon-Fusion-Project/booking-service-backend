@@ -25,4 +25,6 @@ public interface PackageAccommodationService {
 
     PaginatedPackageAccommodationGetResponseDTO getAllPackageAccommodationsPaginated(Pageable pageable);
 
+    PaginatedPackageAccommodationGetResponseDTO getAllPackageAccommodationDetailsPaginated(Long packageId, Long accommodationId, Pageable pageable);
+
 }
