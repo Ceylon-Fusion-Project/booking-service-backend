@@ -28,4 +28,6 @@ public interface BookingService {
 
     PaginatedBookingGetResponseDTO getAllBookingsPaginated(Pageable pageable);
 
+    PaginatedBookingGetResponseDTO getAllBookingDetailsPaginated(Long userId, StatusType statusType, LocalDate checkInDate, Long packageId, Pageable pageable);
+
 }

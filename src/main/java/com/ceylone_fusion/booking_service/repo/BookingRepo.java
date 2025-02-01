@@ -2,6 +2,8 @@ package com.ceylone_fusion.booking_service.repo;
 
 import com.ceylone_fusion.booking_service.entity.Booking;
 import com.ceylone_fusion.booking_service.entity.enums.StatusType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -18,12 +20,18 @@ public interface BookingRepo extends JpaRepository<Booking, Long>, JpaSpecificat
 
     List<Booking> findByStatusType(StatusType statusType);
 
-    List<Booking> findByCheckInDate(LocalDateTime checkInDate);
+    Page<Booking> findByStatusType(StatusType statusType, Pageable pageable);
 
     List<Booking> findByPackages_PackageId(Long packageId);
 
+    Page<Booking> findByPackages_PackageId(Long packageId, Pageable pageable);
+
     List<Booking> findByCheckInDateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
 
+    Page<Booking> findByCheckInDateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable);
+
     List<Booking> findByCustomer(Long customer);
+
+    Page<Booking> findByCustomer(Long customer, Pageable pageable);
 
 }
