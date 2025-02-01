@@ -21,11 +21,19 @@ public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificat
 
     List<Package> findByPackageName(String packageName);
 
+    Page<Package> findByPackageName(String packageName, Pageable pageable);
+
     List<Package> findByPricePerDayBetween(Double minPrice, Double maxPrice);
+
+    Page<Package> findByPricePerDayBetween(Double minPrice, Double maxPrice, Pageable pageable);
 
     List<Package> findByPricePerDayGreaterThanEqual(Double minPrice);
 
+    Page<Package> findByPricePerDayGreaterThanEqual(Double minPrice, Pageable pageable);
+
     List<Package> findByPricePerDayLessThanEqual(Double maxPrice);
+
+    Page<Package> findByPricePerDayLessThanEqual(Double maxPrice, Pageable pageable);
 
     Package findByPackageId(Long packageId);
 
