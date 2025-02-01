@@ -106,7 +106,6 @@ public class PackageController {
             // Fetch package details using the service
             List<PackageGetResponseDTO> response =
                     packageService.getAllPackageDetails(packageName, isPredefined, minPrice, maxPrice);
-
             // Return successful response
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, " Package Found", response),
@@ -114,6 +113,31 @@ public class PackageController {
             );
         } catch (Exception e) {
             return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @GetMapping(path = "/get-package-details-paginated")
+    public ResponseEntity<StandardResponse> getAllPackageDetails(
+            @RequestParam(value = "packageName", required = false) String packageName,
+            @RequestParam(value = "isPredefined", required = false) boolean isPredefined,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        try {
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedPackageGetResponseDTO response =
+                    packageService.getAllPackageDetailsPaginated(packageName, isPredefined, minPrice, maxPrice, pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
                     new StandardResponse(404, e.getMessage(), null),
                     HttpStatus.NOT_FOUND
             );

@@ -25,4 +25,6 @@ public interface PackageService {
 
     PaginatedPackageGetResponseDTO getAllPackagesPaginated(Pageable pageable);
 
+    PaginatedPackageGetResponseDTO getAllPackageDetailsPaginated(String packageName, boolean isPredefined, Double minPrice, Double maxPrice, Pageable pageable);
+
 }

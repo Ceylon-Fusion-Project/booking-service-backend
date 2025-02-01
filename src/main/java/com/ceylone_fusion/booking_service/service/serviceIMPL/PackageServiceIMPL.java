@@ -2,12 +2,9 @@ package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.PackageDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
-import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
-import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
-import com.ceylone_fusion.booking_service.entity.Package;
 import com.ceylone_fusion.booking_service.entity.Package;
 import com.ceylone_fusion.booking_service.repo.PackageRepo;
 import com.ceylone_fusion.booking_service.service.PackageService;
@@ -34,16 +31,13 @@ public class PackageServiceIMPL implements PackageService {
         if (!packageRepo.existsByPackageNameIgnoreCase(packageSaveRequestDTO.getPackageName())) {
             // Map the PackageSaveRequestDTO to the Package entity
             Package newPackage = modelMapper.map(packageSaveRequestDTO, Package.class);
-
             // Save the package to the repository
             packageRepo.save(newPackage);
-
             // Return the saved Package as a DTO
             return modelMapper.map(newPackage, PackageDTO.class);
         } else {
             throw new RuntimeException("Package with name " + packageSaveRequestDTO.getPackageName() + " already exists");
         }
-
     }
 
     @Override
@@ -113,6 +107,33 @@ public class PackageServiceIMPL implements PackageService {
         }
         // Map Package entities to DTOs
         return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>() {}.getType());
+    }
+
+    @Override
+    public PaginatedPackageGetResponseDTO getAllPackageDetailsPaginated(String packageName, boolean isPredefined, Double minPrice, Double maxPrice, Pageable pageable) {
+        Page<Package> packagesPage;
+        if (packageName != null && !packageName.isEmpty()) {
+            packagesPage = packageRepo.findByPackageName(packageName, pageable);
+        } else if (minPrice != null && maxPrice != null) {
+            packagesPage = packageRepo.findByPricePerDayBetween(minPrice, maxPrice, pageable);
+        } else if (minPrice != null) {
+            packagesPage = packageRepo.findByPricePerDayGreaterThanEqual(minPrice, pageable);
+        }else if (maxPrice != null) {
+            packagesPage = packageRepo.findByPricePerDayLessThanEqual(maxPrice, pageable);
+        } else {
+            packagesPage = packageRepo.findAll(pageable);
+        }
+        if (packagesPage.hasContent()) {
+            List<PackageGetResponseDTO> packageGetResponseDTOS = packagesPage.getContent().stream()
+                    .map(packages -> modelMapper.map(packages, PackageGetResponseDTO.class))
+                    .toList();
+            return new PaginatedPackageGetResponseDTO(
+                    packageGetResponseDTOS,
+                    packagesPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Packages Found");
+        }
     }
 
     @Override
