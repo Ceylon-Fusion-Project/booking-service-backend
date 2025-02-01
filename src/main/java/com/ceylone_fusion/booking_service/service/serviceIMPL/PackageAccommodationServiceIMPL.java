@@ -1,6 +1,7 @@
 package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.PackageAccommodationDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageAccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageAccommodationSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageAccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageAccommodationGetResponseDTO;
@@ -12,6 +13,8 @@ import com.ceylone_fusion.booking_service.service.PackageAccommodationService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +38,6 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
     public PackageAccommodationDTO savePackageAccommodation(PackageAccommodationSaveRequestDTO packageAccommodationSaveRequestDTO) {
         Long packageId = packageAccommodationSaveRequestDTO.getPackageId();
         Long accommodationId = packageAccommodationSaveRequestDTO.getAccommodationId();
-
         // Validate if the Package and Accommodation exist
         if (packageRepo.existsById(packageId) && accommodationRepo.existsById(accommodationId)) {
             // Create a new PackageAccommodation instance
@@ -45,10 +47,8 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
                     packageRepo.findPackagesByPackageIdEquals(packageId), // Find the Package entity
                     accommodationRepo.findAccommodationByAccommodationIdEquals(accommodationId) // Find the Accommodation entity
             );
-
             // Save the new PackageAccommodation
             packageAccommodationRepo.save(packageAccommodation);
-
             // Map the entity to a DTO and return it
             return modelMapper.map(packageAccommodation, PackageAccommodationDTO.class);
         } else {
@@ -64,6 +64,25 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
         }
         else{
             throw new RuntimeException("No Accommodation Package Found");
+        }
+    }
+
+    @Override
+    public PaginatedPackageAccommodationGetResponseDTO getAllPackageAccommodationsPaginated(Pageable pageable) {
+        // Fetch paginated package accommodation
+        Page<PackageAccommodation> packageAccommodationsPage = packageAccommodationRepo.findAll(pageable);
+        if (packageAccommodationsPage.hasContent()) {
+            // Convert Page<PackageAccommodation> to List<PackageAccommodationGetResponseDTO>
+            List<PackageAccommodationGetResponseDTO> packageAccommodationGetResponseDTOS = packageAccommodationsPage.getContent().stream()
+                    .map(packageAccommodation -> modelMapper.map(packageAccommodation, PackageAccommodationGetResponseDTO.class))
+                    .toList();
+            // Return paginated response
+            return new PaginatedPackageAccommodationGetResponseDTO(
+                    packageAccommodationGetResponseDTOS,
+                    packageAccommodationsPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Package Accommodations Found");
         }
     }
 
@@ -93,7 +112,6 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
         } else {
             throw new RuntimeException("Accommodation Package Not Found");
         }
-
         // Map entities to DTOs
         return packageAccommodations.stream()
                 .map(packageAccommodation -> new PackageAccommodationGetResponseDTO(
@@ -103,7 +121,6 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
                         packageAccommodation.getAccommodation().getAccommodationId()
                 ))
                 .toList();
-
     }
 
     @Override
@@ -115,15 +132,12 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
         if (packageAccommodationRepo.existsById(packageAccommodationId)) {
             // Get Package Accommodation by Package Accommodation ID and Map Package Accommodation Entity to Package Accommodation DTO
             PackageAccommodation existingPackageAccommodation = packageAccommodationRepo.getReferenceById(packageAccommodationId);
-
             // Update Package Accommodation quantity
             if (packageAccommodationUpdateRequestDTO.getQuantity() != 0) {
                 existingPackageAccommodation.setQuantity(packageAccommodationUpdateRequestDTO.getQuantity());
             }
-
             // Save the updated Package Accommodation
             packageAccommodationRepo.save(existingPackageAccommodation);
-
             return modelMapper.map(existingPackageAccommodation, PackageAccommodationDTO.class);
         } else {
             throw new RuntimeException("Accommodation Package Not Found");
@@ -135,7 +149,6 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
         // Get Package Accommodation by Package Accommodation ID
         if (packageAccommodationRepo.existsById(packageAccommodationId)) {
             String response = packageAccommodationRepo.getReferenceById(packageAccommodationId).getPackageAccommodationId() + " Deleted!";
-
             //delete accommodation
             packageAccommodationRepo.deleteById(packageAccommodationId);
             return response;
@@ -143,6 +156,5 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
             throw new RuntimeException("Accommodation Package Not Found");
         }
     }
-
 
 }
