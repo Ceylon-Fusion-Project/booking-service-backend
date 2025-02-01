@@ -148,6 +148,37 @@ public class BookingServiceIMPL implements BookingService {
     }
 
     @Override
+    public PaginatedBookingGetResponseDTO getAllBookingDetailsPaginated(Long customer, StatusType statusType, LocalDate checkInDate, Long packageId, Pageable pageable) {
+        Page<Booking> bookingsPage;
+        if (customer != null) {
+            bookingsPage = bookingRepo.findByCustomer(customer, pageable);
+        } else if (statusType != null) {
+            bookingsPage = bookingRepo.findByStatusType(statusType, pageable);
+        } else if (checkInDate != null) {
+            // Convert LocalDate to LocalDateTime at midnight (start of the day) for filtering
+            LocalDateTime startOfDay = checkInDate.atStartOfDay();
+            LocalDateTime endOfDay = checkInDate.atTime(23, 59, 59);  // End of the day
+            // Find bookings that fall within the start and end of the given date
+            bookingsPage = bookingRepo.findByCheckInDateBetween(startOfDay, endOfDay, pageable);
+        } else if (packageId != null) {
+            bookingsPage = bookingRepo.findByPackages_PackageId(packageId, pageable);
+        } else {
+            bookingsPage = bookingRepo.findAll(pageable); // Retrieve all bookings if no filters are applied
+        }
+        if (bookingsPage.hasContent()) {
+            List<BookingGetResponseDTO> bookingGetResponseDTOS = bookingsPage.getContent().stream()
+                    .map(booking -> modelMapper.map(booking, BookingGetResponseDTO.class))
+                    .toList();
+            return new PaginatedBookingGetResponseDTO(
+                    bookingGetResponseDTOS,
+                    bookingsPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Packages Found");
+        }
+    }
+
+    @Override
     public BookingDTO updateBookingDetails(BookingUpdateRequestDTO bookingUpdateRequestDTO, Long bookingId) {
         //Get booking by Booking ID
         if (bookingRepo.existsById(bookingId)) {

@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class PaginatedBookingGetResponseDTO {
 
-    private List<BookingGetResponseDTO> packageRatingGetResponseDTOS;
+    private List<BookingGetResponseDTO> bookingGetResponseDTOS;
     private Long total;
 
 }

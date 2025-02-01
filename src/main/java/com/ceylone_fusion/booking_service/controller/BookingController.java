@@ -122,6 +122,32 @@ public class BookingController {
         }
     }
 
+    @GetMapping(path = "/get-booking-details-paginated")
+    public ResponseEntity<StandardResponse> getAllBookingDetails(
+            @RequestParam(value = "userId", required = false) Long userId,
+            @RequestParam(value = "statusType", required = false) StatusType statusType,
+            @RequestParam(value = "checkInDate", required = false) LocalDate checkInDate,
+            @RequestParam(value = "packageId", required = false) Long packageId,
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ){
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedBookingGetResponseDTO response = bookingService.getAllBookingDetailsPaginated(userId, statusType, checkInDate, packageId, pageRequest);
+            // Return successful response
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "Booking Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
     @PatchMapping(
             path = "/update-booking-details",
             params = "id"
