@@ -110,7 +110,7 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
         } else if (accommodationId != null) {
             packageAccommodations = packageAccommodationRepo.findByAccommodation_AccommodationId(accommodationId);
         } else {
-            throw new RuntimeException("Accommodation Package Not Found");
+            packageAccommodations = packageAccommodationRepo.findAll();
         }
         // Map entities to DTOs
         return packageAccommodations.stream()
@@ -121,6 +121,31 @@ public class PackageAccommodationServiceIMPL implements PackageAccommodationServ
                         packageAccommodation.getAccommodation().getAccommodationId()
                 ))
                 .toList();
+    }
+
+    @Override
+    public PaginatedPackageAccommodationGetResponseDTO getAllPackageAccommodationDetailsPaginated(Long packageId, Long accommodationId, Pageable pageable) {
+        Page<PackageAccommodation> packageAccommodationsPage;
+        if (packageId != null && accommodationId != null) {
+            packageAccommodationsPage = packageAccommodationRepo.findByPackages_PackageIdAndAccommodation_AccommodationId(packageId, accommodationId, pageable);
+        } else if (packageId != null) {
+            packageAccommodationsPage = packageAccommodationRepo.findByPackages_PackageId(packageId, pageable);
+        } else if (accommodationId != null) {
+            packageAccommodationsPage = packageAccommodationRepo.findByAccommodation_AccommodationId(accommodationId, pageable);
+        } else {
+            packageAccommodationsPage = packageAccommodationRepo.findAll(pageable);
+        }
+        if (packageAccommodationsPage.hasContent()) {
+            List<PackageAccommodationGetResponseDTO> packageAccommodationGetResponseDTOS = packageAccommodationsPage.getContent().stream()
+                    .map(packageAccommodation -> modelMapper.map(packageAccommodation, PackageAccommodationGetResponseDTO.class))
+                    .toList();
+            return new PaginatedPackageAccommodationGetResponseDTO(
+                    packageAccommodationGetResponseDTOS,
+                    packageAccommodationsPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Package Accommodations Found");
+        }
     }
 
     @Override
