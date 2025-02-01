@@ -1,12 +1,14 @@
 package com.ceylone_fusion.booking_service.controller;
 
 import com.ceylone_fusion.booking_service.dto.PackageAccommodationDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageAccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageAccommodationSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageAccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageAccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.service.PackageAccommodationService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,6 @@ public class PackageAccommodationController {
         }
     }
 
-
     @GetMapping(path = "/get-all-package-accommodations")
     public ResponseEntity<StandardResponse> getAllPackageAccommodations() {
         try {
@@ -55,6 +56,26 @@ public class PackageAccommodationController {
         }
     }
 
+    @GetMapping(path = "/get-all-package-accommodations-paginated")
+    public ResponseEntity<StandardResponse> getAllPackageAccommodation(
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedPackageAccommodationGetResponseDTO response = packageAccommodationService.getAllPackageAccommodationsPaginated(pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Accommodation Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @GetMapping(
             path = "/get-package-accommodation-details-by-id",
@@ -84,7 +105,6 @@ public class PackageAccommodationController {
             // Fetch package-accommodation details using the service
             List<PackageAccommodationGetResponseDTO> response =
                     packageAccommodationService.getAllPackageAccommodationDetails(packageId, accommodationId);
-
             // Return successful response
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "Accommodation Package Found", response),
@@ -97,7 +117,6 @@ public class PackageAccommodationController {
             );
         }
     }
-
 
     @PatchMapping(
             path = "/update-package-accommodation-details",

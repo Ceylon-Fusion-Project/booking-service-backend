@@ -1,9 +1,11 @@
 package com.ceylone_fusion.booking_service.service;
 
 import com.ceylone_fusion.booking_service.dto.PackageAccommodationDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageAccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageAccommodationSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageAccommodationUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageAccommodationGetResponseDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,4 +22,7 @@ public interface PackageAccommodationService {
     PackageAccommodationDTO updatePackageAccommodationDetails(PackageAccommodationUpdateRequestDTO packageAccommodationUpdateRequestDTO, Long packageAccommodationId);
 
     String deletePackageAccommodationById(Long packageAccommodationId);
+
+    PaginatedPackageAccommodationGetResponseDTO getAllPackageAccommodationsPaginated(Pageable pageable);
+
 }
