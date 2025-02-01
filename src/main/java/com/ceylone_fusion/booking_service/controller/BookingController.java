@@ -1,6 +1,7 @@
 package com.ceylone_fusion.booking_service.controller;
 
 import com.ceylone_fusion.booking_service.dto.BookingDTO;
+import com.ceylone_fusion.booking_service.dto.paginated.PaginatedBookingGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.BookingSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.BookingUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.BookingGetResponseDTO;
@@ -8,6 +9,7 @@ import com.ceylone_fusion.booking_service.entity.enums.StatusType;
 import com.ceylone_fusion.booking_service.service.BookingService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +42,6 @@ public class BookingController {
         }
     }
 
-
     @GetMapping(path = "/get-all-bookings")
     public ResponseEntity<StandardResponse> getAllBookings() {
         try {
@@ -51,6 +52,27 @@ public class BookingController {
             );
         } catch (Exception e) {
             return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @GetMapping(path = "/get-all-bookings-paginated")
+    public ResponseEntity<StandardResponse> getAllBookings(
+            @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
+        try {
+            // Pagination Specification
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedBookingGetResponseDTO response = bookingService.getAllBookingsPaginated(pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Bookings Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
                     new StandardResponse(404, e.getMessage(), null),
                     HttpStatus.NOT_FOUND
             );
@@ -87,7 +109,6 @@ public class BookingController {
             // Fetch booking details using the service
             List<BookingGetResponseDTO> response =
                     bookingService.getAllBookingDetails(userId, statusType, checkInDate, packageId);
-
             // Return successful response
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, " Booking Found", response),
