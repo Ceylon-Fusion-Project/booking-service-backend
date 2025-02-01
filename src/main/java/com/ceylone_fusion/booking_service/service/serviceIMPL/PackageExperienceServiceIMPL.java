@@ -2,12 +2,9 @@ package com.ceylone_fusion.booking_service.service.serviceIMPL;
 
 import com.ceylone_fusion.booking_service.dto.PackageExperienceDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageExperienceGetResponseDTO;
-import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageExperienceGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageExperienceSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageExperienceUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageExperienceGetResponseDTO;
-import com.ceylone_fusion.booking_service.dto.response.PackageExperienceGetResponseDTO;
-import com.ceylone_fusion.booking_service.entity.PackageExperience;
 import com.ceylone_fusion.booking_service.entity.PackageExperience;
 import com.ceylone_fusion.booking_service.repo.ExperienceCenterRepo;
 import com.ceylone_fusion.booking_service.repo.PackageExperienceRepo;
@@ -42,7 +39,6 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
     public PackageExperienceDTO savePackageExperience(PackageExperienceSaveRequestDTO packageExperienceSaveRequestDTO) {
         Long packageId = packageExperienceSaveRequestDTO.getPackageId();
         Long experienceId = packageExperienceSaveRequestDTO.getExperienceId();
-
         // Validate if the Package and Experience exist
         if (packageRepo.existsById(packageId) && experienceCenterRepo.existsById(experienceId)) {
             // Create a new PackageExperience instance
@@ -52,10 +48,8 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
                     packageRepo.findPackagesByPackageIdEquals(packageId), // Find the Package entity
                     experienceCenterRepo.findExperienceByExperienceIdEquals(experienceId) // Find the Experience Center entity
             );
-
             // Save the new PackageExperience
             packageExperienceRepo.save(packageExperience);
-
             // Map the entity to a DTO and return it
             return modelMapper.map(packageExperience, PackageExperienceDTO.class);
         } else {
@@ -117,7 +111,7 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
         } else if (experienceId != null) {
             packageExperiences = packageExperienceRepo.findByExperience_ExperienceId(experienceId);
         } else {
-            throw new RuntimeException("Experience Package Not Found");
+            packageExperiences = packageExperienceRepo.findAll();
         }
         // Map entities to DTOs
         return packageExperiences.stream()
@@ -128,6 +122,31 @@ public class PackageExperienceServiceIMPL implements PackageExperienceService {
                         packageExperience.getExperience().getExperienceId()
                 ))
                 .toList();
+    }
+
+    @Override
+    public PaginatedPackageExperienceGetResponseDTO getAllPackageExperienceDetailsPaginated(Long packageId, Long experienceId, Pageable pageable) {
+        Page<PackageExperience> packageExperiencesPage;
+        if (packageId != null && experienceId != null) {
+            packageExperiencesPage = packageExperienceRepo.findByPackages_PackageIdAndExperience_ExperienceId(packageId, experienceId, pageable);
+        } else if (packageId != null) {
+            packageExperiencesPage = packageExperienceRepo.findByPackages_PackageId(packageId, pageable);
+        } else if (experienceId != null) {
+            packageExperiencesPage = packageExperienceRepo.findByExperience_ExperienceId(experienceId, pageable);
+        } else {
+            packageExperiencesPage = packageExperienceRepo.findAll(pageable);
+        }
+        if (packageExperiencesPage.hasContent()) {
+            List<PackageExperienceGetResponseDTO> packageExperienceGetResponseDTOS = packageExperiencesPage.getContent().stream()
+                    .map(packageExperience -> modelMapper.map(packageExperience, PackageExperienceGetResponseDTO.class))
+                    .toList();
+            return new PaginatedPackageExperienceGetResponseDTO(
+                    packageExperienceGetResponseDTOS,
+                    packageExperiencesPage.getTotalElements()
+            );
+        } else {
+            throw new RuntimeException("No Package Experiences Found");
+        }
     }
 
     @Override

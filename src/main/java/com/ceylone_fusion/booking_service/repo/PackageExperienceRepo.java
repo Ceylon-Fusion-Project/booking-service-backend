@@ -1,6 +1,8 @@
 package com.ceylone_fusion.booking_service.repo;
 
 import com.ceylone_fusion.booking_service.entity.PackageExperience;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,7 +18,14 @@ public interface PackageExperienceRepo extends JpaRepository<PackageExperience, 
 
     List<PackageExperience> findByPackages_PackageIdAndExperience_ExperienceId(Long packageId, Long experienceId);
 
+    Page<PackageExperience> findByPackages_PackageIdAndExperience_ExperienceId(Long packageId, Long experienceId, Pageable pageable);
+
     List<PackageExperience> findByPackages_PackageId(Long packageId);
 
+    Page<PackageExperience> findByPackages_PackageId(Long packageId, Pageable pageable);
+
     List<PackageExperience> findByExperience_ExperienceId(Long experienceId);
+
+    Page<PackageExperience> findByExperience_ExperienceId(Long experienceId, Pageable pageable);
+
 }

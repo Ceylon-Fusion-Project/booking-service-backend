@@ -105,7 +105,6 @@ public class PackageExperienceController {
             // Fetch package-experience details using the service
             List<PackageExperienceGetResponseDTO> response =
                     packageExperienceService.getAllPackageExperienceDetails(packageId, experienceId);
-
             // Return successful response
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "Experience Package Found", response),
@@ -119,6 +118,28 @@ public class PackageExperienceController {
         }
     }
 
+    @GetMapping(path = "/get-package-experience-details-paginated")
+    public ResponseEntity<StandardResponse> getAllPackageExperienceDetails(
+            @RequestParam(value = "packageId", required = false) Long packageId,
+            @RequestParam(value = "experienceId", required = false) Long experienceId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        try {
+            PageRequest pageRequest = PageRequest.of(page, size);
+            PaginatedPackageExperienceGetResponseDTO response =
+                    packageExperienceService.getAllPackageExperienceDetailsPaginated(packageId, experienceId, pageRequest);
+            return new ResponseEntity<>(
+                    new StandardResponse(200, "Experience Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
 
     @PatchMapping(
             path = "/update-package-experience-details",
