@@ -36,6 +36,10 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
     public ExperienceCenterDTO saveExperienceCenter(ExperienceCenterSaveRequestDTO experienceCenterSaveRequestDTO) {
         if(!experienceCenterRepo.existsByExperienceCodeEqualsIgnoreCase(experienceCenterSaveRequestDTO.getExperienceCode())){
             ExperienceCenter experienceCenter = modelMapper.map(experienceCenterSaveRequestDTO, ExperienceCenter.class);
+
+            // Set isAvailable to true by default
+            experienceCenter.setAvailable(true);
+
             experienceCenterRepo.save(experienceCenter);
             return modelMapper.map(experienceCenter, ExperienceCenterDTO.class);
         }
@@ -141,9 +145,13 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
                 existingExperienceCenter.setTotalPrice(experienceCenterUpdateRequestDTO.getTotalPrice());
             }
             // Update Experience Is Available
-            if (experienceCenterUpdateRequestDTO.isAvailable()) {
-                existingExperienceCenter.setAvailable(true);
-            }
+//            if (experienceCenterUpdateRequestDTO.isAvailable()) {
+//                existingExperienceCenter.setAvailable(true);
+//            }
+
+            // Set isAvailable to true by default
+            existingExperienceCenter.setAvailable(true);
+
             //Save the updated Experience Center
             experienceCenterRepo.save(existingExperienceCenter);
             return modelMapper.map(existingExperienceCenter, ExperienceCenterDTO.class);

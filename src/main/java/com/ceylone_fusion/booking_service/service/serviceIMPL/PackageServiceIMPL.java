@@ -31,6 +31,10 @@ public class PackageServiceIMPL implements PackageService {
         if (!packageRepo.existsByPackageNameIgnoreCase(packageSaveRequestDTO.getPackageName())) {
             // Map the PackageSaveRequestDTO to the Package entity
             Package newPackage = modelMapper.map(packageSaveRequestDTO, Package.class);
+
+            // Set isPredefined to true
+            newPackage.setPredefined(true);
+
             // Save the package to the repository
             packageRepo.save(newPackage);
             // Return the saved Package as a DTO
@@ -155,9 +159,13 @@ public class PackageServiceIMPL implements PackageService {
                 existingPackage.setPricePerDay(packageUpdateRequestDTO.getPricePerDay());
             }
             // Update Package Is Predefined
-            if (packageUpdateRequestDTO.isPredefined()) {
-                existingPackage.setPredefined(true);
-            }
+//            if (packageUpdateRequestDTO.isPredefined()) {
+//                existingPackage.setPredefined(true);
+//            }
+
+            // Set isPredefined to true
+            existingPackage.setPredefined(true);
+
             // Save the updated Package
             packageRepo.save(existingPackage);
             return modelMapper.map(existingPackage, PackageDTO.class);

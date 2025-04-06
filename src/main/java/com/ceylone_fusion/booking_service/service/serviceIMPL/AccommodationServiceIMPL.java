@@ -41,9 +41,12 @@ public class AccommodationServiceIMPL implements AccommodationService {
             System.out.println("Received DTO: " + accommodationSaveRequestDTO);
             Accommodation accommodation = modelMapper.map(accommodationSaveRequestDTO, Accommodation.class);
 
-            if (accommodationSaveRequestDTO.isAvailable()) {
-                accommodation.setAvailable(true);
-            }
+//            if (accommodationSaveRequestDTO.isAvailable()) {
+//                accommodation.setAvailable(true);
+//            }
+
+            // Set isAvailable is true
+            accommodation.setAvailable(true);
 
             accommodationRepo.save(accommodation);
             System.out.println("Mapped Entity: " + accommodation);
@@ -181,9 +184,8 @@ public class AccommodationServiceIMPL implements AccommodationService {
         accommodation.setAccDemoVideoLink(dto.getAccDemoVideoLink());
 //        accommodation.setAvailable(dto.isAvailable()); // ✅ fixed logic
 
-        if (dto.isAvailable()) {
-            accommodation.setAvailable(true);
-        }
+        // Set the isAvailable value is true
+        accommodation.setAvailable(true);
 
         accommodationRepo.save(accommodation);
 
