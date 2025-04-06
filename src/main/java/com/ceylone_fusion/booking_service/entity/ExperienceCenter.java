@@ -31,11 +31,17 @@ public class ExperienceCenter {
     @Column(name="location", nullable = false)
     private String location;
 
+    @Column(name = "exp_center_map_link", nullable = false)
+    private String expCenterMapLink;
+
     @Column(name="total_price")
     private Double totalPrice;
 
-    @Column(name="is_available")
-    private boolean isAvailable;
+    @Column(name = "exp_demo_video_link")
+    private String expDemoVideoLink;
+
+    @Column(name="is_available" , nullable = false, columnDefinition = "boolean default true")
+    private boolean isAvailable = true;
 
     @OneToMany(mappedBy="experienceCenter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Event> events;

@@ -16,6 +16,8 @@ public class AccommodationDTO {
     private AccommodationType accommodationType;
     private String accommodationDescription;
     private String location;
+    private String accommodationMapLink;
+    private String accDemoVideoLink;
     private boolean isAvailable;
 
 }

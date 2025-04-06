@@ -45,8 +45,8 @@ public class Room {
     @Column(name="price_per_night", nullable = false)
     private Double pricePerNight;
 
-    @Column(name = "is_available")
-    private boolean isAvailable;
+    @Column(name = "is_available",nullable = false, columnDefinition = "boolean default true")
+    private boolean isAvailable = true;
 
     @CreationTimestamp
     @Column(name = "created_at")

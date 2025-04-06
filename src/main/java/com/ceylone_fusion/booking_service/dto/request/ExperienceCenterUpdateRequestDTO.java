@@ -12,6 +12,8 @@ public class ExperienceCenterUpdateRequestDTO {
     private String experienceName;
     private String experienceDescription;
     private String location;
+    private String expCenterMapLink;
+    private String expDemoVideoLink;
     private Double totalPrice;
     private boolean isAvailable;
 

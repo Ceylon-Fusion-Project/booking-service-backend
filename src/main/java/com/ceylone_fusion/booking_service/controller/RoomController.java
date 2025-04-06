@@ -129,8 +129,8 @@ public class RoomController {
     }
 
     @GetMapping(
-            path = "/get-room-details-by-id",
-            params = "id"
+            path = "/get-room-details-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> getRoomById(@RequestParam(value = "id") Long roomId) {
         try {
@@ -186,8 +186,8 @@ public class RoomController {
     }
 
     @PatchMapping(
-            path = "/update-room-details",
-            params = "id"
+            path = "/update-room-details"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> updateRoomDetails(
             @RequestBody RoomUpdateRequestDTO roomUpdateRequestDTO,
@@ -208,8 +208,8 @@ public class RoomController {
     }
 
     @DeleteMapping(
-            path = "/delete-room-by-id",
-            params = "id"
+            path = "/delete-room-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> deleteRoomById(@RequestParam(value = "id") Long roomId) {
         try {

@@ -35,8 +35,8 @@ public class Event {
     @Column(name="price_per_event", nullable = false)
     private Double pricePerEvent;
 
-    @Column(name="is_available")
-    private boolean isAvailable;
+    @Column(name="is_available" , nullable = false, columnDefinition = "boolean default true")
+    private boolean isAvailable = true;
 
     @Column(name="start_time", nullable = false)
     private LocalTime startTime;

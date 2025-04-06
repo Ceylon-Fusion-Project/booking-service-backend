@@ -33,8 +33,8 @@ public class Package {
     @Column(name="price", nullable = false)
     private Double pricePerDay;
 
-    @Column(name = "is_predefined")
-    private boolean isPredefined;
+    @Column(name = "is_predefined" , nullable = false, columnDefinition = "boolean default false")
+    private boolean isPredefined = false;
 
     @Column(name = "package_avg_rating")
     private Double packageRatingValue = 0.0;

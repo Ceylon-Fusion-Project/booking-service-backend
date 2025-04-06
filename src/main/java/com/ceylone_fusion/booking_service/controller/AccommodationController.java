@@ -34,6 +34,7 @@ public class AccommodationController {
                     HttpStatus.CREATED
             );
         } catch (Exception e) {
+            System.out.println("Problem Is There!");
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(409, e.getMessage(), null),
                     HttpStatus.CONFLICT
@@ -129,8 +130,8 @@ public class AccommodationController {
     }
 
     @GetMapping(
-            path = "/get-accommodation-details-by-id",
-            params = "id"
+            path = "/get-accommodation-details-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> getAccommodationById(@RequestParam(value = "id") Long accommodationId) {
         try {
@@ -167,8 +168,8 @@ public class AccommodationController {
     }
 
     @PatchMapping(
-            path = "/update-accommodation-details",
-            params = "id"
+            path = "/update-accommodation-details"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> updateAccommodationDetails(
             @RequestBody AccommodationUpdateRequestDTO accommodationUpdateRequestDTO,
@@ -189,8 +190,8 @@ public class AccommodationController {
     }
 
     @DeleteMapping(
-            path = "/delete-accommodation-by-id",
-            params = "id"
+            path = "/delete-accommodation-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> deleteAccommodationById(@RequestParam(value = "id") Long accommodationId) {
         try {

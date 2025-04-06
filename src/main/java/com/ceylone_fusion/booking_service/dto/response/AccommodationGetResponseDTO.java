@@ -16,6 +16,8 @@ public class AccommodationGetResponseDTO {
     private AccommodationType accommodationType;
     private String description;
     private String location;
+    private String accommodationMapLink;
+    private String accDemoVideoLink;
     private boolean isAvailable;
 
 }
