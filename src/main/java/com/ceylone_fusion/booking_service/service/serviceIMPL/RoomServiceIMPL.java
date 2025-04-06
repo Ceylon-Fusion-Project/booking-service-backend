@@ -51,6 +51,10 @@ public class RoomServiceIMPL implements RoomService {
                     roomSaveRequestDTO.isAvailable(),
                     accommodationRepo.findAccommodationByAccommodationIdEquals(accommodationId)
             );
+
+            // Set isAvailable default true
+            newRoom.setAvailable(true);
+
             roomRepo.save(newRoom);
             return modelMapper.map(newRoom, RoomDTO.class);
         } else {
@@ -187,9 +191,13 @@ public class RoomServiceIMPL implements RoomService {
                 existingRoom.setPricePerNight(roomUpdateRequestDTO.getPricePerNight());
             }
             // Update Is Available
-            if (roomUpdateRequestDTO.isAvailable()) {
-                existingRoom.setAvailable(true);
-            }
+//            if (roomUpdateRequestDTO.isAvailable()) {
+//                existingRoom.setAvailable(true);
+//            }
+
+            // Set isAvailable default true
+            existingRoom.setAvailable(true);
+
             // Save the updated Room
             roomRepo.save(existingRoom);
             return modelMapper.map(existingRoom, RoomDTO.class);

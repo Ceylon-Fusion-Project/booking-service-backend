@@ -51,6 +51,11 @@ public class EventServiceIMPL implements EventService {
                     eventSaveRequestDTO.getEndTime(),
                     experienceCenterRepo.findExperienceCenterByExperienceIdEquals(experienceId)
             );
+
+            // Set isAvailable to true
+            newEvent.setAvailable(true);
+
+
             eventRepo.save(newEvent);
             return modelMapper.map(newEvent, EventDTO.class);
         } else {
@@ -174,9 +179,13 @@ public class EventServiceIMPL implements EventService {
                 existingEvent.setPricePerEvent(eventUpdateRequestDTO.getPricePerEvent());
             }
             // Update Is Available
-            if (eventUpdateRequestDTO.isAvailable()) {
-                existingEvent.setAvailable(true);
-            }
+//            if (eventUpdateRequestDTO.isAvailable()) {
+//                existingEvent.setAvailable(true);
+//            }
+
+            // Set isAvailable default true
+            existingEvent.setAvailable(true);
+
             // Update Event Start Time
             if (eventUpdateRequestDTO.getStartTime() != null) {
                 existingEvent.setStartTime(eventUpdateRequestDTO.getStartTime());
