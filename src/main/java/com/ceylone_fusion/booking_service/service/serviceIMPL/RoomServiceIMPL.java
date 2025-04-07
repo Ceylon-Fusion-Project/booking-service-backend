@@ -39,26 +39,30 @@ public class RoomServiceIMPL implements RoomService {
 
     @Override
     public RoomDTO saveRoom(RoomSaveRequestDTO roomSaveRequestDTO) {
-        Long accommodationId = roomSaveRequestDTO.getAccommodationId();
-        if (accommodationRepo.existsById(accommodationId)) {
-            Room newRoom = new Room(
-                    roomSaveRequestDTO.getRoomCode(),
-                    roomSaveRequestDTO.getRoomNumber(),
-                    roomSaveRequestDTO.getRoomType(),
-                    roomSaveRequestDTO.getRoomImageURLs(),
-                    roomSaveRequestDTO.getBeds(),
-                    roomSaveRequestDTO.getPricePerNight(),
-                    roomSaveRequestDTO.isAvailable(),
-                    accommodationRepo.findAccommodationByAccommodationIdEquals(accommodationId)
-            );
+        if(!roomRepo.existsByRoomCodeEqualsIgnoreCase(roomSaveRequestDTO.getRoomCode())){
+            Long accommodationId = roomSaveRequestDTO.getAccommodationId();
+            if (accommodationRepo.existsById(accommodationId)) {
+                Room newRoom = new Room(
+                        roomSaveRequestDTO.getRoomCode(),
+                        roomSaveRequestDTO.getRoomNumber(),
+                        roomSaveRequestDTO.getRoomType(),
+                        roomSaveRequestDTO.getRoomImageURLs(),
+                        roomSaveRequestDTO.getBeds(),
+                        roomSaveRequestDTO.getPricePerNight(),
+                        roomSaveRequestDTO.isAvailable(),
+                        accommodationRepo.findAccommodationByAccommodationIdEquals(accommodationId)
+                );
 
-            // Set isAvailable default true
-            newRoom.setAvailable(true);
+                // Set isAvailable default true
+                newRoom.setAvailable(true);
 
-            roomRepo.save(newRoom);
-            return modelMapper.map(newRoom, RoomDTO.class);
+                roomRepo.save(newRoom);
+                return modelMapper.map(newRoom, RoomDTO.class);
+            } else {
+                throw new RuntimeException("Accommodation Not Found");
+            }
         } else {
-            throw new RuntimeException("Accommodation Not Found");
+            throw new RuntimeException(roomSaveRequestDTO.getRoomCode() + " is already exists");
         }
     }
 

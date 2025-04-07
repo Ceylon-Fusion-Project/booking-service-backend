@@ -29,4 +29,5 @@ public interface RoomRepo extends JpaRepository<Room, Long>, JpaSpecificationExe
     @Query("SELECT r FROM Room r WHERE r.accommodation.accommodationId = :accommodationId")
     Page<Room> findByAccommodationId(Long accommodationId, Pageable pageable);
 
+    boolean existsByRoomCodeEqualsIgnoreCase(String roomCode);
 }
