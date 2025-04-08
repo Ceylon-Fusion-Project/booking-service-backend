@@ -4,7 +4,9 @@ import com.ceylone_fusion.booking_service.dto.PackageDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
+import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
+import com.ceylone_fusion.booking_service.entity.Accommodation;
 import com.ceylone_fusion.booking_service.entity.Package;
 import com.ceylone_fusion.booking_service.repo.PackageRepo;
 import com.ceylone_fusion.booking_service.service.PackageService;
@@ -111,6 +113,28 @@ public class PackageServiceIMPL implements PackageService {
         }
         // Map Package entities to DTOs
         return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>() {}.getType());
+    }
+
+//    @Override
+//    public List<AccommodationGetResponseDTO> getAccommodationByCode(String accommodationCode) {
+//        List<Accommodation> accommodations = accommodationRepo.findAllByAccommodationCodeEquals(accommodationCode);
+//        if(!accommodations.isEmpty()) {
+//            return modelMapper.map(accommodations, new TypeToken<List<AccommodationGetResponseDTO>>(){}.getType());
+//        }
+//        else {
+//            throw new RuntimeException("No Accommodation Found");
+//        }
+//    }
+
+    @Override
+    public List<PackageGetResponseDTO> getPackageByCode(String packageCode) {
+        List<Package> packages = packageRepo.findAllByPackageCodeEquals(packageCode);
+        if(!packages.isEmpty()) {
+            return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>(){}.getType());
+        }
+        else {
+            throw new RuntimeException("No Package Found");
+        }
     }
 
     @Override

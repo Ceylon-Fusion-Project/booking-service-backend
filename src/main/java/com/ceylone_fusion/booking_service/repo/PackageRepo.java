@@ -38,4 +38,5 @@ public interface PackageRepo extends JpaRepository<Package, Long>, JpaSpecificat
 
     Package findPackagesByPackageIdEquals(Long packageId);
 
+    List<Package> findAllByPackageCodeEquals(String packageCode);
 }

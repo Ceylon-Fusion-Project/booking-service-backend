@@ -4,6 +4,7 @@ import com.ceylone_fusion.booking_service.dto.PackageDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
+import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.service.PackageService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
@@ -83,6 +84,44 @@ public class PackageController {
     public ResponseEntity<StandardResponse> getPackageById(@RequestParam(value = "id") Long packageId) {
         try {
             List<PackageGetResponseDTO> response = packageService.getPackageById(packageId);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+//    @GetMapping(
+//            path = "/get-accommodation-details-by-code",
+//            params = "code"
+//    )
+//    public ResponseEntity<StandardResponse> getAccommodationByCode(@RequestParam(value = "code") String accommodationCode) {
+//        try {
+//            List<AccommodationGetResponseDTO> response = accommodationService.getAccommodationByCode(accommodationCode);
+//            return new ResponseEntity<StandardResponse>(
+//                    new StandardResponse(200, "Accommodation Found", response),
+//                    HttpStatus.OK
+//            );
+//        } catch (Exception e) {
+//            return new ResponseEntity<StandardResponse>(
+//                    new StandardResponse(404, e.getMessage(), null),
+//                    HttpStatus.NOT_FOUND
+//            );
+//        }
+//    }
+
+    @GetMapping(
+            path = "/get-package-details-by-code",
+            params = "code"
+    )
+    public ResponseEntity<StandardResponse> getPackageByCode(@RequestParam(value = "code") String packageCode) {
+        try {
+            List<PackageGetResponseDTO> response = packageService.getPackageByCode(packageCode);
             return new ResponseEntity<StandardResponse>(
                     new StandardResponse(200, "Package Found", response),
                     HttpStatus.OK
