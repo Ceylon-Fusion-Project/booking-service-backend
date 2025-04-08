@@ -130,8 +130,8 @@ public class EventController {
     }
 
     @GetMapping(
-            path = "/get-event-details-by-id",
-            params = "id"
+            path = "/get-event-details-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> getEventById(@RequestParam(value = "id") Long eventId) {
         try {
@@ -187,8 +187,8 @@ public class EventController {
     }
 
     @PatchMapping(
-            path = "/update-event-details",
-            params = "id"
+            path = "/update-event-details"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> updateEventDetails(
             @RequestBody EventUpdateRequestDTO eventUpdateRequestDTO,
@@ -209,8 +209,8 @@ public class EventController {
     }
 
     @DeleteMapping(
-            path = "/delete-event-by-id",
-            params = "id"
+            path = "/delete-event-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> deleteEventById(@RequestParam(value = "id") Long eventId) {
         try {

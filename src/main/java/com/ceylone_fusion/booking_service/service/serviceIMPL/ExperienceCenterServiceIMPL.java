@@ -125,37 +125,64 @@ public class ExperienceCenterServiceIMPL implements ExperienceCenterService {
             Long experienceId
     ) {
         //Get Experience Center by Experience ID
+//        if (experienceCenterRepo.existsById(experienceId)) {
+//            // Get Experience Center by Experience ID and Map Experience Center Entity to Experience Center DTO
+//            ExperienceCenter existingExperienceCenter = experienceCenterRepo.getReferenceById(experienceId);
+//            // Update Experience name
+//            if (experienceCenterUpdateRequestDTO.getExperienceName() != null) {
+//                existingExperienceCenter.setExperienceName(experienceCenterUpdateRequestDTO.getExperienceName());
+//            }
+//            // Update Experience Description
+//            if (experienceCenterUpdateRequestDTO.getExperienceDescription() != null) {
+//                existingExperienceCenter.setExperienceDescription(experienceCenterUpdateRequestDTO.getExperienceDescription());
+//            }
+//            // Update Experience Location
+//            if (experienceCenterUpdateRequestDTO.getLocation() != null) {
+//                existingExperienceCenter.setLocation(experienceCenterUpdateRequestDTO.getLocation());
+//            }
+//            // Update Experience Total Cost
+//            if (experienceCenterUpdateRequestDTO.getTotalPrice() != null) {
+//                existingExperienceCenter.setTotalPrice(experienceCenterUpdateRequestDTO.getTotalPrice());
+//            }
+//            // Update Experience Is Available
+////            if (experienceCenterUpdateRequestDTO.isAvailable()) {
+////                existingExperienceCenter.setAvailable(true);
+////            }
+//
+//            // Set isAvailable to true by default
+//            existingExperienceCenter.setAvailable(true);
+//
+//            //Save the updated Experience Center
+//            experienceCenterRepo.save(existingExperienceCenter);
+//            return modelMapper.map(existingExperienceCenter, ExperienceCenterDTO.class);
+
         if (experienceCenterRepo.existsById(experienceId)) {
-            // Get Experience Center by Experience ID and Map Experience Center Entity to Experience Center DTO
             ExperienceCenter existingExperienceCenter = experienceCenterRepo.getReferenceById(experienceId);
-            // Update Experience name
+
             if (experienceCenterUpdateRequestDTO.getExperienceName() != null) {
                 existingExperienceCenter.setExperienceName(experienceCenterUpdateRequestDTO.getExperienceName());
             }
-            // Update Experience Description
             if (experienceCenterUpdateRequestDTO.getExperienceDescription() != null) {
                 existingExperienceCenter.setExperienceDescription(experienceCenterUpdateRequestDTO.getExperienceDescription());
             }
-            // Update Experience Location
             if (experienceCenterUpdateRequestDTO.getLocation() != null) {
                 existingExperienceCenter.setLocation(experienceCenterUpdateRequestDTO.getLocation());
             }
-            // Update Experience Total Cost
             if (experienceCenterUpdateRequestDTO.getTotalPrice() != null) {
                 existingExperienceCenter.setTotalPrice(experienceCenterUpdateRequestDTO.getTotalPrice());
             }
-            // Update Experience Is Available
-//            if (experienceCenterUpdateRequestDTO.isAvailable()) {
-//                existingExperienceCenter.setAvailable(true);
-//            }
+            if (experienceCenterUpdateRequestDTO.getExpCenterMapLink() != null) {
+                existingExperienceCenter.setExpCenterMapLink(experienceCenterUpdateRequestDTO.getExpCenterMapLink());
+            }
+            if (experienceCenterUpdateRequestDTO.getExpDemoVideoLink() != null) {
+                existingExperienceCenter.setExpDemoVideoLink(experienceCenterUpdateRequestDTO.getExpDemoVideoLink());
+            }
 
-            // Set isAvailable to true by default
             existingExperienceCenter.setAvailable(true);
 
-            //Save the updated Experience Center
             experienceCenterRepo.save(existingExperienceCenter);
             return modelMapper.map(existingExperienceCenter, ExperienceCenterDTO.class);
-        } else {
+    } else {
             throw new RuntimeException("Experience Center Not Found");
         }
     }

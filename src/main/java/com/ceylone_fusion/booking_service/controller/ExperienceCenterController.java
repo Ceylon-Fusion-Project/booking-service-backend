@@ -122,8 +122,8 @@ public class ExperienceCenterController {
     }
 
     @GetMapping(
-            path = "/get-experience-center-details-by-id",
-            params = "id"
+            path = "/get-experience-center-details-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> getExperienceCenterById(@RequestParam(value = "id") Long experienceId) {
         try {
@@ -161,8 +161,8 @@ public class ExperienceCenterController {
     }
 
     @PatchMapping(
-            path = "/update-experience-center-details",
-            params = "id"
+            path = "/update-experience-center-details"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> updateExperienceCenterDetails(
             @RequestBody ExperienceCenterUpdateRequestDTO experienceCenterUpdateRequestDTO,
@@ -184,8 +184,8 @@ public class ExperienceCenterController {
     }
 
     @DeleteMapping(
-            path = "/delete-experience-center-by-id",
-            params = "id"
+            path = "/delete-experience-center-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> deleteExperienceCenterById(@RequestParam(value = "id") Long experienceId) {
         try {
