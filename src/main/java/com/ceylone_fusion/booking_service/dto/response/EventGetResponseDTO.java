@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+//import java.time.LocalTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -18,8 +19,8 @@ public class EventGetResponseDTO {
     private String eventDescription;
     private Double pricePerEvent;
     private boolean isAvailable;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Long experienceId;
 
 }
