@@ -24,6 +24,9 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long packageId;
 
+    @Column(name = "package_code", nullable = false, unique = true, updatable = false)
+    private String packageCode;
+
     @Column(name="package_name", nullable = false)
     private String packageName;
 

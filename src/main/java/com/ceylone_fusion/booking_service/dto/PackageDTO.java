@@ -13,6 +13,7 @@ public class PackageDTO {
 
     private Long packageId;
     private String packageName;
+    private String packageCode;
     private String description;
     private Double pricePerDay;
     private boolean isPredefined;

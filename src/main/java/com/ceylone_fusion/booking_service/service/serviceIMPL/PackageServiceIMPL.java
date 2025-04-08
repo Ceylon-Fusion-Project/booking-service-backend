@@ -114,6 +114,17 @@ public class PackageServiceIMPL implements PackageService {
     }
 
     @Override
+    public List<PackageGetResponseDTO> getPackageByCode(String packageCode) {
+        List<Package> packages = packageRepo.findAllByPackageCodeEquals(packageCode);
+        if(!packages.isEmpty()) {
+            return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>(){}.getType());
+        }
+        else {
+            throw new RuntimeException("No Package Found");
+        }
+    }
+
+    @Override
     public PaginatedPackageGetResponseDTO getAllPackageDetailsPaginated(String packageName, boolean isPredefined, Double minPrice, Double maxPrice, Pageable pageable) {
         Page<Package> packagesPage;
         if (packageName != null && !packageName.isEmpty()) {

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class PackageSaveRequestDTO {
 
+    private String packageCode;
     private String packageName;
     private String description;
     private Double pricePerDay;

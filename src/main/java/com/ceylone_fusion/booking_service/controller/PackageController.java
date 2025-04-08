@@ -95,6 +95,26 @@ public class PackageController {
         }
     }
 
+
+    @GetMapping(
+            path = "/get-package-details-by-code",
+            params = "code"
+    )
+    public ResponseEntity<StandardResponse> getPackageByCode(@RequestParam(value = "code") String packageCode) {
+        try {
+            List<PackageGetResponseDTO> response = packageService.getPackageByCode(packageCode);
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(200, "Package Found", response),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<StandardResponse>(
+                    new StandardResponse(404, e.getMessage(), null),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
     @GetMapping(path = "/get-package-details")
     public ResponseEntity<StandardResponse> getAllPackageDetails(
             @RequestParam(value = "packageName", required = false) String packageName,
