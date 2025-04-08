@@ -4,7 +4,6 @@ import com.ceylone_fusion.booking_service.dto.PackageDTO;
 import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
-import com.ceylone_fusion.booking_service.dto.response.AccommodationGetResponseDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
 import com.ceylone_fusion.booking_service.service.PackageService;
 import com.ceylone_fusion.booking_service.util.StandardResponse;
