@@ -115,17 +115,6 @@ public class PackageServiceIMPL implements PackageService {
         return modelMapper.map(packages, new TypeToken<List<PackageGetResponseDTO>>() {}.getType());
     }
 
-//    @Override
-//    public List<AccommodationGetResponseDTO> getAccommodationByCode(String accommodationCode) {
-//        List<Accommodation> accommodations = accommodationRepo.findAllByAccommodationCodeEquals(accommodationCode);
-//        if(!accommodations.isEmpty()) {
-//            return modelMapper.map(accommodations, new TypeToken<List<AccommodationGetResponseDTO>>(){}.getType());
-//        }
-//        else {
-//            throw new RuntimeException("No Accommodation Found");
-//        }
-//    }
-
     @Override
     public List<PackageGetResponseDTO> getPackageByCode(String packageCode) {
         List<Package> packages = packageRepo.findAllByPackageCodeEquals(packageCode);

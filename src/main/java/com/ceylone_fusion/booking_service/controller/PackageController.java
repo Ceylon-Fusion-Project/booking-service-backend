@@ -96,24 +96,6 @@ public class PackageController {
         }
     }
 
-//    @GetMapping(
-//            path = "/get-accommodation-details-by-code",
-//            params = "code"
-//    )
-//    public ResponseEntity<StandardResponse> getAccommodationByCode(@RequestParam(value = "code") String accommodationCode) {
-//        try {
-//            List<AccommodationGetResponseDTO> response = accommodationService.getAccommodationByCode(accommodationCode);
-//            return new ResponseEntity<StandardResponse>(
-//                    new StandardResponse(200, "Accommodation Found", response),
-//                    HttpStatus.OK
-//            );
-//        } catch (Exception e) {
-//            return new ResponseEntity<StandardResponse>(
-//                    new StandardResponse(404, e.getMessage(), null),
-//                    HttpStatus.NOT_FOUND
-//            );
-//        }
-//    }
 
     @GetMapping(
             path = "/get-package-details-by-code",
