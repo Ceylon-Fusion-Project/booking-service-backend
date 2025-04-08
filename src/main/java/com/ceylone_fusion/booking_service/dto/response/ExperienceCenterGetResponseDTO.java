@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ExperienceCenterGetResponseDTO {
 
+    private Long experienceId;
     private String experienceCode;
     private String experienceName;
     private String experienceDescription;

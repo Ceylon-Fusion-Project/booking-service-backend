@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class BookingGetResponseDTO {
 
+    private Long bookingId;
     private Long customer;
     private StatusType statusType;
     private LocalDateTime checkInDate;

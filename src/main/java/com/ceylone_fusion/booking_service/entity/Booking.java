@@ -60,3 +60,57 @@ public class Booking {
         this.packages = packages;
     }
 }
+
+
+//package com.ceylone_fusion.booking_service.entity;
+//
+//import com.ceylone_fusion.booking_service.entity.enums.BookingStatus;
+//import jakarta.persistence.*;
+//import lombok.AllArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
+//import org.hibernate.annotations.CreationTimestamp;
+//import org.hibernate.annotations.UpdateTimestamp;
+//
+//import java.time.LocalDateTime;
+//import java.util.List;
+//
+//@Entity
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Table(name = "bookings")
+//public class Booking {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Column(name = "booking_id")
+//    private Long bookingId;
+//
+//    @Column(name = "customer", nullable = false)
+//    private Long customer;
+//
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "status", nullable = false)
+//    private BookingStatus bookingStatus;
+//
+//    @Column(name = "check_in_date", nullable = false)
+//    private LocalDateTime checkInDate;
+//
+//    @Column(name = "check_out_date", nullable = false)
+//    private LocalDateTime checkOutDate;
+//
+//    @Column(name = "total_cost", nullable = false)
+//    private Double totalCost;
+//
+//    @CreationTimestamp
+//    @Column(name = "created_at", nullable = false, updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @UpdateTimestamp
+//    @Column(name = "updated_at", nullable = false)
+//    private LocalDateTime updatedAt;
+//
+//    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<BookingItem> bookingItems;
+//}
+
