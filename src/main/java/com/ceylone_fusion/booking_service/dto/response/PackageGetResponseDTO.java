@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,5 +19,7 @@ public class PackageGetResponseDTO {
     private Double packageRatingValue;
     private LocalDate createdAt;
     private LocalDate updatedAt;
+    private List<Long> roomIds;
+    private List<Long> eventIds;
 
 }
