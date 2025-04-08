@@ -19,7 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+//import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -220,8 +221,8 @@ public class EventServiceIMPL implements EventService {
             String eventName,
             Double minPrice,
             Double maxPrice,
-            LocalTime startTime,
-            LocalTime endTime,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
             boolean isAvailable,
             Pageable pageable
     ) {

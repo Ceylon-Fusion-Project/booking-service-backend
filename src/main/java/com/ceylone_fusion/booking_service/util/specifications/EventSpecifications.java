@@ -4,7 +4,8 @@ import com.ceylone_fusion.booking_service.entity.Event;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+//import java.time.LocalTime;
 
 public class EventSpecifications {
     
@@ -55,7 +56,7 @@ public class EventSpecifications {
         };
     }
 
-    public static Specification<Event> hasTimeRange(LocalTime startTime, LocalTime endTime) {
+    public static Specification<Event> hasTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
         return (root, query, criteriaBuilder) -> {
             if(startTime == null && endTime == null) {
                 return criteriaBuilder.conjunction();
