@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -13,5 +15,7 @@ public class PackageUpdateRequestDTO {
     private String description;
     private Double pricePerDay;
     private boolean isPredefined;
+    private List<Long> roomIds;
+    private List<Long> eventIds;
 
 }

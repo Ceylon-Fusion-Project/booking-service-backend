@@ -50,11 +50,42 @@ public class Package {
     @Column(name = "updated_at", nullable = false)
     private LocalDate updatedAt;
 
-    @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PackageAccommodation> packageAccommodations;
+//    @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<PackageAccommodation> packageAccommodations;
+//
+//    @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<PackageExperience> packageExperiences;
 
-    @OneToMany(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PackageExperience> packageExperiences;
+    // Store associated room IDs
+//    @ElementCollection
+//    @CollectionTable(name = "package_rooms", joinColumns = @JoinColumn(name = "package_id"))
+//    @Column(name = "room_id")
+//    private List<Long> roomIds;
+//
+//    // Store associated event IDs
+//    @ElementCollection
+//    @CollectionTable(name = "package_events", joinColumns = @JoinColumn(name = "package_id"))
+//    @Column(name = "event_id")
+//    private List<Long> eventIds;
+
+    // UPDATED: Many-to-Many relationship with Room
+    @ManyToMany
+    @JoinTable(
+            name = "package_rooms",
+            joinColumns = @JoinColumn(name = "package_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_id")
+    )
+    private List<Room> rooms;
+
+    // UPDATED: Many-to-Many relationship with Event
+    @ManyToMany
+    @JoinTable(
+            name = "package_events",
+            joinColumns = @JoinColumn(name = "package_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> events;
+
 
     @OneToOne(mappedBy="packages", cascade = CascadeType.ALL, orphanRemoval = true)
     private Booking booking;
