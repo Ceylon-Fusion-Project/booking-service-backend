@@ -14,7 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+//import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -241,8 +242,8 @@ public class EventController {
     ) {
         try {
             // Parse startTime and endTime if provided
-            LocalTime parsedStartTime = startTime != null ? LocalTime.parse(startTime) : null;
-            LocalTime parsedEndTime = endTime != null ? LocalTime.parse(endTime) : null;
+            LocalDateTime parsedStartTime = startTime != null ? LocalDateTime.parse(startTime) : null;
+            LocalDateTime parsedEndTime = endTime != null ? LocalDateTime.parse(endTime) : null;
             // Sort Specification
             Sort sortSpec;
             switch (sort) {
