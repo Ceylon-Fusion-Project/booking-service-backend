@@ -5,8 +5,12 @@ import com.ceylone_fusion.booking_service.dto.paginated.PaginatedPackageGetRespo
 import com.ceylone_fusion.booking_service.dto.request.PackageSaveRequestDTO;
 import com.ceylone_fusion.booking_service.dto.request.PackageUpdateRequestDTO;
 import com.ceylone_fusion.booking_service.dto.response.PackageGetResponseDTO;
+import com.ceylone_fusion.booking_service.entity.Event;
 import com.ceylone_fusion.booking_service.entity.Package;
+import com.ceylone_fusion.booking_service.entity.Room;
+import com.ceylone_fusion.booking_service.repo.EventRepo;
 import com.ceylone_fusion.booking_service.repo.PackageRepo;
+import com.ceylone_fusion.booking_service.repo.RoomRepo;
 import com.ceylone_fusion.booking_service.service.PackageService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -24,6 +28,12 @@ public class PackageServiceIMPL implements PackageService {
     private PackageRepo packageRepo;
 
     @Autowired
+    private RoomRepo roomRepo; // UPDATED: Inject RoomRepo
+
+    @Autowired
+    private EventRepo eventRepo; // UPDATED: Inject EventRepo
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -31,6 +41,18 @@ public class PackageServiceIMPL implements PackageService {
         if (!packageRepo.existsByPackageNameIgnoreCase(packageSaveRequestDTO.getPackageName())) {
             // Map the PackageSaveRequestDTO to the Package entity
             Package newPackage = modelMapper.map(packageSaveRequestDTO, Package.class);
+
+            // UPDATED: Set rooms from roomIds
+            if (packageSaveRequestDTO.getRoomIds() != null) {
+                List<Room> rooms = roomRepo.findAllById(packageSaveRequestDTO.getRoomIds());
+                newPackage.setRooms(rooms);
+            }
+
+            // UPDATED: Set events from eventIds
+            if (packageSaveRequestDTO.getEventIds() != null) {
+                List<Event> events = eventRepo.findAllById(packageSaveRequestDTO.getEventIds());
+                newPackage.setEvents(events);
+            }
 
             // Set isPredefined to true
             newPackage.setPredefined(true);
@@ -169,6 +191,18 @@ public class PackageServiceIMPL implements PackageService {
             if (packageUpdateRequestDTO.getPricePerDay() != null) {
                 existingPackage.setPricePerDay(packageUpdateRequestDTO.getPricePerDay());
             }
+
+            // UPDATED: Update rooms and events
+            if (packageUpdateRequestDTO.getRoomIds() != null) {
+                List<Room> rooms = roomRepo.findAllById(packageUpdateRequestDTO.getRoomIds());
+                existingPackage.setRooms(rooms);
+            }
+
+            if (packageUpdateRequestDTO.getEventIds() != null) {
+                List<Event> events = eventRepo.findAllById(packageUpdateRequestDTO.getEventIds());
+                existingPackage.setEvents(events);
+            }
+
             // Update Package Is Predefined
 //            if (packageUpdateRequestDTO.isPredefined()) {
 //                existingPackage.setPredefined(true);
