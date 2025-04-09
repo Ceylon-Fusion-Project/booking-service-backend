@@ -158,50 +158,89 @@ public class EventServiceIMPL implements EventService {
         }
     }
 
-    @Override
-    public EventDTO updateEventDetails(
-            EventUpdateRequestDTO eventUpdateRequestDTO,
-            Long eventId
-    ) {
-        //Get event by Event ID
-        if (eventRepo.existsById(eventId)) {
-            // Get Event by Event ID and Map Event Entity to Event DTO
-            Event existingEvent = eventRepo.getReferenceById(eventId);
-            // Update Event Image URLs
-            if (eventUpdateRequestDTO.getEventImageURLs() != null) {
-                existingEvent.setEventImageURLs(eventUpdateRequestDTO.getEventImageURLs());
-            }
-            // Update Event Description
-            if (eventUpdateRequestDTO.getEventDescription() != null) {
-                existingEvent.setEventDescription(eventUpdateRequestDTO.getEventDescription());
-            }
-            // Update Price Per Event
-            if (eventUpdateRequestDTO.getPricePerEvent() != null) {
-                existingEvent.setPricePerEvent(eventUpdateRequestDTO.getPricePerEvent());
-            }
-            // Update Is Available
-//            if (eventUpdateRequestDTO.isAvailable()) {
-//                existingEvent.setAvailable(true);
+//    @Override
+//    public EventDTO updateEventDetails(
+//            EventUpdateRequestDTO eventUpdateRequestDTO,
+//            Long eventId
+//    ) {
+//        //Get event by Event ID
+//        if (eventRepo.existsById(eventId)) {
+//            // Get Event by Event ID and Map Event Entity to Event DTO
+//            Event existingEvent = eventRepo.getReferenceById(eventId);
+//            // Update Event Image URLs
+//            if (eventUpdateRequestDTO.getEventImageURLs() != null) {
+//                existingEvent.setEventImageURLs(eventUpdateRequestDTO.getEventImageURLs());
 //            }
+//            // Update Event Description
+//            if (eventUpdateRequestDTO.getEventDescription() != null) {
+//                existingEvent.setEventDescription(eventUpdateRequestDTO.getEventDescription());
+//            }
+//            // Update Price Per Event
+//            if (eventUpdateRequestDTO.getPricePerEvent() != null) {
+//                existingEvent.setPricePerEvent(eventUpdateRequestDTO.getPricePerEvent());
+//            }
+//            // Update Is Available
+////            if (eventUpdateRequestDTO.isAvailable()) {
+////                existingEvent.setAvailable(true);
+////            }
+//
+//            // Set isAvailable default true
+//            existingEvent.setAvailable(true);
+//
+//            // Update Event Start Time
+//            if (eventUpdateRequestDTO.getStartTime() != null) {
+//                existingEvent.setStartTime(eventUpdateRequestDTO.getStartTime());
+//            }
+//            // Update Event End Time
+//            if (eventUpdateRequestDTO.getEndTime() != null) {
+//                existingEvent.setEndTime(eventUpdateRequestDTO.getEndTime());
+//            }
+//            // Save the updated Event
+//            eventRepo.save(existingEvent);
+//            return modelMapper.map(existingEvent, EventDTO.class);
+//        } else {
+//            throw new RuntimeException("Event Not Found");
+//        }
+//    }
 
-            // Set isAvailable default true
-            existingEvent.setAvailable(true);
+@Override
+public EventDTO updateEventDetails(EventUpdateRequestDTO eventUpdateRequestDTO, Long eventId) {
+    if (eventRepo.existsById(eventId)) {
+        Event existingEvent = eventRepo.getReferenceById(eventId);
 
-            // Update Event Start Time
-            if (eventUpdateRequestDTO.getStartTime() != null) {
-                existingEvent.setStartTime(eventUpdateRequestDTO.getStartTime());
-            }
-            // Update Event End Time
-            if (eventUpdateRequestDTO.getEndTime() != null) {
-                existingEvent.setEndTime(eventUpdateRequestDTO.getEndTime());
-            }
-            // Save the updated Event
-            eventRepo.save(existingEvent);
-            return modelMapper.map(existingEvent, EventDTO.class);
-        } else {
-            throw new RuntimeException("Event Not Found");
+        // ADD THIS TO FIX THE ISSUE
+        if (eventUpdateRequestDTO.getEventName() != null) {
+            existingEvent.setEventName(eventUpdateRequestDTO.getEventName());
         }
+
+        if (eventUpdateRequestDTO.getEventImageURLs() != null) {
+            existingEvent.setEventImageURLs(eventUpdateRequestDTO.getEventImageURLs());
+        }
+
+        if (eventUpdateRequestDTO.getEventDescription() != null) {
+            existingEvent.setEventDescription(eventUpdateRequestDTO.getEventDescription());
+        }
+
+        if (eventUpdateRequestDTO.getPricePerEvent() != null) {
+            existingEvent.setPricePerEvent(eventUpdateRequestDTO.getPricePerEvent());
+        }
+
+        if (eventUpdateRequestDTO.getStartTime() != null) {
+            existingEvent.setStartTime(eventUpdateRequestDTO.getStartTime());
+        }
+
+        if (eventUpdateRequestDTO.getEndTime() != null) {
+            existingEvent.setEndTime(eventUpdateRequestDTO.getEndTime());
+        }
+
+        existingEvent.setAvailable(true);
+
+        eventRepo.save(existingEvent);
+        return modelMapper.map(existingEvent, EventDTO.class);
+    } else {
+        throw new RuntimeException("Event Not Found");
     }
+}
 
     @Override
     public String deleteEventById(Long eventId) {

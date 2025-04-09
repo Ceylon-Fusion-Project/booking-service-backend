@@ -77,8 +77,8 @@ public class PackageController {
     }
 
     @GetMapping(
-            path = "/get-package-details-by-id",
-            params = "id"
+            path = "/get-package-details-by-id"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> getPackageById(@RequestParam(value = "id") Long packageId) {
         try {
@@ -165,8 +165,8 @@ public class PackageController {
     }
 
     @PatchMapping(
-            path = "/update-package-details",
-            params = "id"
+            path = "/update-package-details"
+            //params = "id"
     )
     public ResponseEntity<StandardResponse> updatePackageDetails(
             @RequestBody PackageUpdateRequestDTO packageUpdateRequestDTO,
@@ -188,8 +188,7 @@ public class PackageController {
     }
 
     @DeleteMapping(
-            path = "/delete-package-by-id",
-            params = "id"
+            path = "/delete-package-by-id"
     )
     public ResponseEntity<StandardResponse> deletePackageById(@RequestParam(value = "id") Long packageId) {
         try {
